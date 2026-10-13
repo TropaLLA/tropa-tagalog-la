@@ -31,10 +31,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={classString}>
-       <Providers>
-          <NavBar />
-          {children}
-          <Footer />
+        <Providers>
+          <div className="phone-frame mx-auto bg-white shadow min-vh-100 d-flex flex-column">
+            <NavBar />
+            <main className="flex-grow-1">{children}</main>
+            <Footer />
+          </div>
         </Providers>
       </body>
     </html>
