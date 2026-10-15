@@ -5,6 +5,7 @@ import "./globals.css";
 import Footer from '@/components/Footer';
 import NavBar from '@/components/Navbar';
 import Providers from './providers';
+import AppShell from "@/components/AppShell";
 
 
 const geistSans = Geist({
@@ -32,11 +33,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={classString}>
         <Providers>
-          <div className="phone-frame mx-auto bg-white shadow min-vh-100 d-flex flex-column">
-            <NavBar />
-            <main className="flex-grow-1">{children}</main>
-            <Footer />
-          </div>
+          <AppShell>{children}</AppShell>
         </Providers>
       </body>
     </html>

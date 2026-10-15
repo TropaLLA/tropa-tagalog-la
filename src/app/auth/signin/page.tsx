@@ -1,57 +1,79 @@
-'use client';
+"use client";
 
-import { signIn } from 'next-auth/react'; // v5 compatible
-import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
+import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
-/** The sign in page. */
-const SignIn = () => {
-  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+export default function SignInPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const target = e.target as typeof e.target & {
-      email: { value: string };
-      password: { value: string };
-    };
-    const email = target.email.value;
-    const password = target.password.value;
-    await signIn('credentials', {
-      callbackUrl: '/list',
+    setError("");
+    setLoading(true);
+
+    const result = await signIn("credentials", {
       email,
       password,
+      redirect: false,
     });
-  };
+
+    setLoading(false);
+
+    if (result?.error) {
+      setError("Invalid email or password.");
+      return;
+    }
+    router.push("/"); // change to wherever logged-in users should land
+    router.refresh();
+  }
 
   return (
-    <main>
-      <Container>
-        <Row className="justify-content-center">
-          <Col xs={5}>
-            <h1 className="text-center">Sign In</h1>
-            <Card>
-              <Card.Body>
-                <Form method="post" onSubmit={handleSubmit}>
-                  <Form.Group controlId="formBasicEmail">
-                    <Form.Label>Email</Form.Label>
-                    <input name="email" type="text" className="form-control" />
-                  </Form.Group>
-                  <Form.Group>
-                    <Form.Label>Password</Form.Label>
-                    <input name="password" type="password" className="form-control" />
-                  </Form.Group>
-                  <Button type="submit" className="mt-3">
-                    Signin
-                  </Button>
-                </Form>
-              </Card.Body>
-              <Card.Footer>
-                Don&apos;t have an account?
-                <a href="/auth/signup">Sign up</a>
-              </Card.Footer>
-            </Card>
-          </Col>
-        </Row>
-      </Container>
-    </main>
-  );
-};
+    <div className="login-page">
+      <div className="login-circle login-yellow" />
+      <div className="login-circle login-green" />
+      <div className="login-circle login-teal" />
+      <div className="login-circle login-red" />
 
-export default SignIn;
+      <form onSubmit={handleSubmit} className="login-form">
+        <Image src="/bird.png" alt="Mascot" width={120} height={120} className="login-bird" priority />
+        <h1 className="login-title">Welcome!</h1>
+
+        <label htmlFor="email" className="login-label">Email</label>
+        <input
+          id="email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="login-input"
+          required
+        />
+
+        <label htmlFor="password" className="login-label">Password</label>
+        <input
+          id="password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="login-input"
+          required
+        />
+
+        {error && <p className="login-error">{error}</p>}
+
+        <button type="submit" className="login-btn login-btn-primary" disabled={loading}>
+          {loading ? "Logging in..." : "Log in"}
+        </button>
+        <Link href="/auth/signup" className="login-btn login-btn-secondary login-link">
+          Sign up
+        </Link>
+      </form>
+    </div>
+  );
+}

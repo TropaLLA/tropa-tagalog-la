@@ -12,3 +12,90 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+:root {
+  /* Brand colors (eyeballed from the design; swap in exact Figma hex values) */
+  --navy: #0f3b75;
+  --beige: #dfd3bd;
+  --yellow: #fddd2e;
+  --green: #6bbf74;
+  --teal: #5b8e9a;
+  --red: #ee4040;
+  --white: #ffffff;
+}
+
+body {
+  background: var(--beige);
+  color: var(--navy);
+}
+
+/* Phone-width column (skip this block if you already define .phone-frame elsewhere) */
+.phone-frame {
+  width: 100%;
+  max-width: 430px;
+}
+
+/* ---------- Login page ---------- */
+.login-page {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  background: var(--beige);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-circle { position: absolute; border-radius: 50%; aspect-ratio: 1; }
+.login-yellow { width: 52%; top: -4%;     right: -12%; background: var(--yellow); }
+.login-green  { width: 30%; top: 17%;     left: -17%;  background: var(--green); }
+.login-teal   { width: 52%; bottom: -12%; left: -8%;   background: var(--teal); }
+.login-red    { width: 23%; bottom: 7%;   right: -8%;  background: var(--red); }
+
+.login-form {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-bird { margin: 0 auto; width: 7.5rem; height: auto; }
+
+.login-title {
+  margin: 1rem 0 2rem;
+  text-align: center;
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--navy);
+}
+
+.login-label {
+  margin-bottom: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.login-input {
+  height: 3.25rem;
+  margin-bottom: 1.25rem;
+  padding: 0 1rem;
+  border: 1.5px solid var(--navy);
+  border-radius: 1.25rem;
+  background: var(--white);
+}
+
+.login-error { color: #dc2626; font-size: 0.875rem; margin-bottom: 0.75rem; }
+
+.login-btn {
+  height: 3.25rem;
+  border-radius: 1.25rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.login-btn-primary   { border: none; background: var(--navy); color: var(--white); margin-top: 0.5rem; }
+.login-btn-secondary { border: 2px solid var(--navy); background: var(--yellow); color: var(--navy); margin-top: 1rem; }
