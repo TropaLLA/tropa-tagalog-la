@@ -30,7 +30,7 @@ export default function SignInPage() {
       setError("Invalid email or password.");
       return;
     }
-    router.push("/"); // change to wherever logged-in users should land
+    router.push("/home"); // change to wherever logged-in users should land
     router.refresh();
   }
 

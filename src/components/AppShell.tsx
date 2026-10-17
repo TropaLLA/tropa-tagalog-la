@@ -4,19 +4,21 @@ import { usePathname } from "next/navigation";
 import NavBar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
+const NO_CHROME = ["/auth", "/home", "/vocab", "/lesson", "/settings"];
+
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isAuthPage = pathname === "/login";
+  const hideChrome = pathname === "/" || NO_CHROME.some((p) => pathname.startsWith(p));
 
   return (
     <div
       className={`phone-frame mx-auto shadow min-vh-100 d-flex flex-column ${
-        isAuthPage ? "" : "bg-white"
+        hideChrome ? "" : "bg-white"
       }`}
     >
-      {!isAuthPage && <NavBar />}
+      {!hideChrome && <NavBar />}
       <main className="flex-grow-1 d-flex flex-column">{children}</main>
-      {!isAuthPage && <Footer />}
+      {!hideChrome && <Footer />}
     </div>
   );
 }

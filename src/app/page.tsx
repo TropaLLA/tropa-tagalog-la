@@ -1,21 +1,28 @@
-import { Col, Container, Image, Row } from 'react-bootstrap';
+import Image from "next/image";
+import Link from "next/link";
 
-/** The Home page. */
-const Home = () => (
-  <main>
-    <Container id="landing-page" fluid className="py-3">
-      <Row className="align-middle text-center">
-        <Col xs={4}>
-          <Image src="next.svg" width="150px" alt="" />
-        </Col>
+export default function LandingPage() {
+  return (
+    <div className="login-page">
+      <div className="login-circle login-yellow" />
+      <div className="login-circle login-green" />
+      <div className="login-circle login-teal" />
+      <div className="login-circle login-red" />
 
-        <Col xs={8} className="d-flex flex-column justify-content-center">
-          <h1>Welcome to this template</h1>
-          <p>Now get to work and modify this app!</p>
-        </Col>
-      </Row>
-    </Container>
-  </main>
-);
+      <div className="login-form landing-content">
+        <Image src="/bird.png" alt="Mascot" width={120} height={120} className="login-bird" priority />
+        <h1 className="login-title">Welcome!</h1>
+        <p className="landing-subtitle">
+          Your tagline goes here. Say what the app does in one short sentence.
+        </p>
 
-export default Home;
+        <Link href="/auth/signup" className="login-btn login-btn-yellow login-link">
+          Get started
+        </Link>
+        <Link href="/auth/signin" className="login-btn login-btn-primary login-link">
+          I already have an account
+        </Link>
+      </div>
+    </div>
+  );
+}

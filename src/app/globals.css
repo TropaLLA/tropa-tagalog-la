@@ -14,7 +14,6 @@ body {
 }
 
 :root {
-  /* Brand colors (eyeballed from the design; swap in exact Figma hex values) */
   --navy: #0f3b75;
   --beige: #dfd3bd;
   --yellow: #fddd2e;
@@ -22,6 +21,8 @@ body {
   --teal: #5b8e9a;
   --red: #ee4040;
   --white: #ffffff;
+  --aqua: #1fc4c4;
+  --orange: #e8661f;
 }
 
 body {
@@ -29,13 +30,32 @@ body {
   color: var(--navy);
 }
 
-/* Phone-width column (skip this block if you already define .phone-frame elsewhere) */
-.phone-frame {
-  width: 100%;
-  max-width: 430px;
-}
+.phone-frame { width: 100%; max-width: 430px; }
 
-/* ---------- Login page ---------- */
+/* ---------- Shared buttons (work on <button> and <Link>) ---------- */
+.login-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 3.25rem;
+  margin-top: 0.75rem;
+  border: 2px solid var(--navy);
+  border-radius: 1.25rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+.login-btn:hover { text-decoration: none; filter: brightness(0.95); }
+
+.login-btn-primary,
+.login-btn-primary:hover { background: var(--navy); color: var(--white); }
+
+.login-btn-yellow,
+.login-btn-yellow:hover,
+.login-btn-secondary,
+.login-btn-secondary:hover { background: var(--yellow); color: var(--navy); }
+
+/* ---------- Landing / sign in / sign up ---------- */
 .login-page {
   position: relative;
   flex: 1;
@@ -70,15 +90,9 @@ body {
   text-align: center;
   font-size: 3rem;
   font-weight: 800;
-  color: var(--navy);
 }
 
-.login-label {
-  margin-bottom: 0.25rem;
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: var(--navy);
-}
+.login-label { margin-bottom: 0.25rem; font-size: 0.875rem; font-weight: 700; }
 
 .login-input {
   height: 3.25rem;
@@ -89,13 +103,158 @@ body {
   background: var(--white);
 }
 
-.login-error { color: #dc2626; font-size: 0.875rem; margin-bottom: 0.75rem; }
+.login-error { margin-bottom: 0.75rem; font-size: 0.875rem; color: #dc2626; }
 
-.login-btn {
-  height: 3.25rem;
-  border-radius: 1.25rem;
-  font-weight: 700;
-  cursor: pointer;
+.landing-content { text-align: center; }
+.landing-subtitle { margin: -1rem 0 2rem; font-size: 1.1rem; }
+
+/* ---------- Signed-in screens ---------- */
+.app-screen {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 100vh;
+  background: var(--beige);
 }
-.login-btn-primary   { border: none; background: var(--navy); color: var(--white); margin-top: 0.5rem; }
-.login-btn-secondary { border: 2px solid var(--navy); background: var(--yellow); color: var(--navy); margin-top: 1rem; }
+.app-content { flex: 1; padding: 0 1.25rem; }
+.page-heading { font-weight: 800; }
+
+/* Top bar + hamburger menu */
+.topbar { display: flex; align-items: center; justify-content: flex-end; padding: 1.25rem; }
+.icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 2px solid var(--navy);
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--navy);
+}
+.icon-btn.dropdown-toggle::after { display: none; }
+.menu-item { display: flex; align-items: center; gap: 0.6rem; color: var(--navy); font-weight: 700; }
+
+/* Home */
+.home-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 2rem 1.25rem;
+  margin-bottom: 1rem;
+  background: var(--aqua);
+  border-radius: 1.75rem;
+}
+.speech-bubble {
+  padding: 1rem 1.25rem;
+  background: var(--white);
+  border-radius: 1.25rem;
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+.stat-row { display: flex; gap: 1rem; margin-bottom: 1rem; }
+.stat-card { flex: 1; display: flex; flex-direction: column; padding: 1rem; border-radius: 1.25rem; }
+.stat-card span { font-size: 0.8rem; font-weight: 700; }
+.stat-card strong { font-size: 1.75rem; }
+.stat-yellow { background: var(--yellow); }
+.stat-green { background: var(--green); }
+.start-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 3.5rem;
+  background: var(--orange);
+  border-radius: 2rem;
+  color: var(--navy);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+/* Bottom tabs */
+.bottom-nav {
+  position: sticky;
+  bottom: 1rem;
+  display: flex;
+  gap: 0.25rem;
+  margin: 1rem;
+  padding: 0.4rem;
+  background: var(--white);
+  border: 2px solid var(--navy);
+  border-radius: 2rem;
+}
+.bottom-nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.125rem;
+  padding: 0.5rem 0;
+  border-radius: 1.5rem;
+  color: var(--navy);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+.bottom-nav-item.active { background: var(--navy); color: var(--white); }
+
+/* ---------- Lesson hub ---------- */
+.module-list { display: flex; flex-direction: column; gap: 1rem; }
+.module-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  border-radius: 1.5rem;
+  color: var(--navy);
+  text-decoration: none;
+}
+.module-card:hover { color: var(--navy); filter: brightness(0.96); }
+.module-card h2 { margin: 0; font-size: 1.25rem; font-weight: 800; }
+.module-card p { margin: 0; font-size: 0.85rem; }
+.module-aqua { background: var(--aqua); }
+.module-yellow { background: var(--yellow); }
+.module-green { background: var(--green); }
+
+/* ---------- Conversation ---------- */
+.chat { display: flex; flex-direction: column; }
+.chat-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+.chat-back { color: var(--navy); font-weight: 700; text-decoration: none; }
+.chat-log {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-height: 40vh;
+  max-height: 55vh;
+  overflow-y: auto;
+  padding: 0.5rem 0;
+}
+.chat-row { display: flex; align-items: flex-end; gap: 0.5rem; }
+.chat-row.me { justify-content: flex-end; }
+.chat-avatar { flex-shrink: 0; height: auto; }
+.chat-bubble {
+  max-width: 80%;
+  padding: 0.75rem 1rem;
+  border-radius: 1.25rem;
+  background: var(--white);
+  font-weight: 700;
+}
+.chat-row.me .chat-bubble { background: var(--navy); color: var(--white); }
+.chat-bubble small { display: block; margin-top: 0.25rem; font-weight: 600; white-space: pre-line; opacity: 0.85; }
+.chat-bubble.ok { background: var(--green); }
+.chat-bubble.error { background: #fde2e2; border: 2px solid var(--red); }
+.chat-bubble.hint { background: var(--yellow); }
+
+.chat-input { display: flex; align-items: center; gap: 0.5rem; padding-top: 0.75rem; }
+.chat-input .icon-btn { flex-shrink: 0; }
+.chat-field {
+  flex: 1;
+  min-width: 0;
+  height: 2.75rem;
+  padding: 0 1rem;
+  border: 2px solid var(--navy);
+  border-radius: 1.5rem;
+  background: var(--white);
+}
+.icon-btn.send { background: var(--navy); color: var(--white); }
+.icon-btn.listening { background: var(--red); border-color: var(--red); color: var(--white); }
