@@ -10,8 +10,12 @@ const tabs = [
   { href: "/lesson", label: "Lesson", Icon: Pencil },
 ];
 
+// Only these exact pages show the tabs. Lessons and word lists (/lesson/travel, /vocab/travel) don't.
+const SHOW_ON = ["/home", "/vocab", "/lesson", "/settings"];
+
 export default function BottomNav() {
   const pathname = usePathname();
+  if (!SHOW_ON.includes(pathname)) return null;
 
   return (
     <nav className="bottom-nav">

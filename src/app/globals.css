@@ -258,3 +258,134 @@ body {
 }
 .icon-btn.send { background: var(--navy); color: var(--white); }
 .icon-btn.listening { background: var(--red); border-color: var(--red); color: var(--white); }
+
+/* ---------- Vocab ---------- */
+.vocab-section-title {
+  margin: 1.25rem 0 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.vocab-card { margin-bottom: 0.75rem; padding: 1rem; border-radius: 1.25rem; background: var(--white); }
+.vocab-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; }
+.vocab-word { margin: 0; font-size: 1.25rem; font-weight: 800; }
+.vocab-meaning { margin: 0; font-size: 0.9rem; }
+.vocab-actions { display: flex; flex-shrink: 0; gap: 0.5rem; }
+.vocab-actions .icon-btn { width: 2.5rem; height: 2.5rem; }
+.vocab-result { margin: 0.5rem 0 0; font-size: 0.85rem; font-weight: 700; }
+.vocab-result.ok { color: #2e7d32; }
+.vocab-result.bad { color: #c62828; }
+.vocab-example {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 1rem;
+  background: var(--beige);
+  font-size: 0.9rem;
+}
+.vocab-example small { display: block; opacity: 0.8; }
+.vocab-speak { padding: 0; border: none; background: none; color: var(--navy); }
+.vocab-grammar { margin: 0.5rem 0 0; font-size: 0.8rem; }
+
+/* ---------- Lesson intro cards ---------- */
+.intro-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem 0;
+  padding: 1.5rem 1rem;
+  border-radius: 1.75rem;
+  background: var(--white);
+  text-align: center;
+}
+.intro-art {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 9rem;
+  border-radius: 1.25rem;
+  background: var(--aqua);
+}
+.intro-emoji { font-size: 4.5rem; line-height: 1; }
+.intro-word { margin: 0.5rem 0 0; font-size: 1.9rem; font-weight: 800; }
+.intro-phonetic { margin: 0; padding: 0.25rem 0.9rem; border-radius: 1rem; background: var(--yellow); font-weight: 700; }
+.intro-meaning { margin: 0; font-size: 1.05rem; }
+.intro-actions { display: flex; gap: 0.75rem; }
+.intro-actions .login-btn { flex: 1; margin-top: 0; }
+
+/* ---------- Tap to build ---------- */
+.tap-answer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 3.5rem;
+  padding: 0.6rem;
+  border: 2px dashed var(--navy);
+  border-radius: 1.25rem;
+  background: var(--white);
+}
+.tap-placeholder { font-size: 0.9rem; opacity: 0.6; }
+.tap-bank { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin: 0.75rem 0; }
+.tile {
+  padding: 0.5rem 0.9rem;
+  border: 2px solid var(--navy);
+  border-radius: 1rem;
+  background: var(--yellow);
+  color: var(--navy);
+  font-weight: 700;
+}
+.tile-picked { background: var(--navy); color: var(--white); }
+.tap-actions { display: flex; align-items: center; gap: 0.5rem; }
+.tap-actions .icon-btn { flex-shrink: 0; }
+.tap-actions .login-btn { flex: 1; height: 2.75rem; margin-top: 0; }
+.login-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.mode-toggle {
+  display: block;
+  margin: 0.75rem auto 0;
+  padding: 0.35rem 1rem;
+  border: 2px solid var(--navy);
+  border-radius: 1.25rem;
+  background: transparent;
+  color: var(--navy);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+/* ---------- Lesson summary ---------- */
+.summary-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 0.5rem 0 1rem;
+  text-align: center;
+}
+.summary-hero h1 { margin: 0.5rem 0 0; font-size: 2rem; font-weight: 800; }
+.summary-hero p { margin: 0; }
+.summary-title {
+  margin: 1.25rem 0 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.summary-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  margin-bottom: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-left: 0.5rem solid var(--green);
+  border-radius: 1rem;
+  background: var(--white);
+}
+.summary-row.bad { border-left-color: var(--red); }
+.summary-row small { opacity: 0.85; }
+.stat-aqua { background: var(--aqua); }
