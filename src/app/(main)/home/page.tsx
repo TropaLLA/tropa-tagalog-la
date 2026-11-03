@@ -6,7 +6,7 @@ export default function HomePage() {
     <>
       <section className="home-hero">
         <div className="speech-bubble">Ready for today&apos;s lesson?</div>
-        <Image src="/bird.png" alt="Mascot" width={110} height={110} />
+        <Image src="/mascot.png" alt="Mascot" width={70} height={145} />
       </section>
 
       <div className="stat-row">

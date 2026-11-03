@@ -6,8 +6,9 @@ import Link from "next/link";
 import { Lightbulb, Mic, SendFill } from "react-bootstrap-icons";
 import IntroCards from "@/components/IntroCards";
 import LessonSummary, { type StepStats } from "@/components/LessonSummary";
+import ScenarioCard from "@/components/ScenarioCard";
 import { listen } from "@/lib/speech";
-import { normalize, type Lesson } from "@/lib/lessons";
+import { normalize, type Lesson, type Scenario } from "@/lib/lessons";
 
 type Msg = {
   from: "mascot" | "me";
@@ -17,12 +18,19 @@ type Msg = {
 };
 type Tile = { id: number; text: string };
 
+// Swap these for real art later (one image per mood).
+const SPRITES = {
+  neutral: "/mascot.png",
+  happy: "/mascot.png",
+  confused: "/mascot.png",
+};
+
 const blankStats = (count: number): StepStats[] =>
   Array.from({ length: count }, () => ({ wrong: [], notes: [], hinted: false }));
 
-const openingMessages = (lesson: Lesson): Msg[] => [
+const openingMessages = (lesson: Lesson, scenario: Scenario): Msg[] => [
   { from: "mascot", text: lesson.intro },
-  { from: "mascot", text: lesson.steps[0].prompt },
+  { from: "mascot", text: scenario.steps[0].prompt },
 ];
 
 function wordsOf(sentence: string) {
@@ -46,18 +54,24 @@ function shuffled(words: string[], seed: number): Tile[] {
 }
 
 export default function Conversation({ lesson }: { lesson: Lesson }) {
-  const [phase, setPhase] = useState<"cards" | "chat">("cards");
+  const [phase, setPhase] = useState<"cards" | "brief" | "chat">("cards");
   const [mode, setMode] = useState<"tap" | "type">("tap");
+  const [scenarioIndex, setScenarioIndex] = useState(0);
   const [index, setIndex] = useState(0);
   const [finished, setFinished] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
-  const [stats, setStats] = useState<StepStats[]>(() => blankStats(lesson.steps.length));
+  const [showScenario, setShowScenario] = useState(false);
+  const [showTranscript, setShowTranscript] = useState(false);
+  const [stats, setStats] = useState<StepStats[]>(() => blankStats(lesson.scenarios[0].steps.length));
   const [input, setInput] = useState("");
   const [picked, setPicked] = useState<number[]>([]);
   const [listening, setListening] = useState(false);
-  const [messages, setMessages] = useState<Msg[]>(() => openingMessages(lesson));
+  const [messages, setMessages] = useState<Msg[]>(() => openingMessages(lesson, lesson.scenarios[0]));
   const endRef = useRef<HTMLDivElement>(null);
-  const step = lesson.steps[index];
+
+  const scenario = lesson.scenarios[scenarioIndex];
+  const steps = scenario.steps;
+  const step = steps[index];
 
   const tiles = useMemo(
     () => shuffled([...wordsOf(step.hint), ...(step.distractors ?? [])], index + 1),
@@ -67,10 +81,27 @@ export default function Conversation({ lesson }: { lesson: Lesson }) {
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, showTranscript]);
 
   if (phase === "cards") {
-    return <IntroCards title={lesson.title} cards={lesson.cards} onDone={() => setPhase("chat")} />;
+    return <IntroCards title={lesson.title} cards={lesson.cards} onDone={() => setPhase("brief")} />;
+  }
+
+  if (phase === "brief") {
+    return (
+      <div>
+        <div className="chat-header">
+          <Link href="/lesson" className="chat-back">← Lessons</Link>
+          <strong>{lesson.title}</strong>
+          <span>Your mission</span>
+        </div>
+        <ScenarioCard scenario={scenario} />
+        <button type="button" className="login-btn login-btn-primary" onClick={() => setPhase("chat")}>
+          Start
+        </button>
+        <p className="scenario-tip">Tap “Scenario” during the chat to read this again.</p>
+      </div>
+    );
   }
 
   // Returns true when the answer was correct.
@@ -84,7 +115,7 @@ export default function Conversation({ lesson }: { lesson: Lesson }) {
 
     if (correct) {
       added.push({ from: "mascot", text: "Magaling! Great job!", tone: "ok" });
-      const next = lesson.steps[index + 1];
+      const next = steps[index + 1];
       if (next) {
         added.push({ from: "mascot", text: next.prompt });
         setIndex(index + 1);
@@ -148,42 +179,104 @@ export default function Conversation({ lesson }: { lesson: Lesson }) {
     }
   }
 
+  // Moves to the next scenario (or repeats the only one) and shows its briefing.
   function restart() {
+    const nextIndex = (scenarioIndex + 1) % lesson.scenarios.length;
+    const next = lesson.scenarios[nextIndex];
+    setScenarioIndex(nextIndex);
     setIndex(0);
     setFinished(false);
     setShowSummary(false);
+    setShowScenario(false);
+    setShowTranscript(false);
     setInput("");
     setPicked([]);
-    setStats(blankStats(lesson.steps.length));
-    setMessages(openingMessages(lesson));
+    setStats(blankStats(next.steps.length));
+    setMessages(openingMessages(lesson, next));
+    setPhase("brief");
   }
 
   if (showSummary) {
-    return <LessonSummary lesson={lesson} stats={stats} onRestart={restart} />;
+    return <LessonSummary lesson={lesson} scenario={scenario} stats={stats} onRestart={restart} />;
   }
+
+  // What Tambay is saying right now: his latest consecutive lines, plus the current
+  // question if it isn't already among them (for example after a wrong answer).
+  let start = messages.length;
+  while (start > 0 && messages[start - 1].from === "mascot") start--;
+  const lines = messages.slice(start);
+  const needsPrompt = !finished && !lines.some((m) => m.text === step.prompt);
+
+  const lastTone = [...lines].reverse().find((m) => m.tone)?.tone;
+  const mood = finished || lastTone === "ok" ? "happy" : lastTone === "error" ? "confused" : "neutral";
 
   return (
     <div className="chat">
       <div className="chat-header">
         <Link href="/lesson" className="chat-back">← Lessons</Link>
-        <strong>{lesson.title}</strong>
-        <span>{finished ? lesson.steps.length : index + 1}/{lesson.steps.length}</span>
+        <strong>{scenario.title}</strong>
+        <span>{finished ? steps.length : index + 1}/{steps.length}</span>
       </div>
 
-      <div className="chat-log">
-        {messages.map((m, i) => (
-          <div key={i} className={`chat-row ${m.from}`}>
-            {m.from === "mascot" && (
-              <Image src="/bird.png" alt="" width={36} height={36} className="chat-avatar" />
-            )}
-            <div className={`chat-bubble ${m.tone ?? ""}`}>
-              <div>{m.text}</div>
-              {m.sub && <small>{m.sub}</small>}
-            </div>
-          </div>
-        ))}
-        <div ref={endRef} />
+      <div className="vn-toggles">
+        <button
+          type="button"
+          className="mode-toggle"
+          onClick={() => { setShowScenario(!showScenario); setShowTranscript(false); }}
+        >
+          {showScenario ? "Back to chat" : "Scenario"}
+        </button>
+        <button
+          type="button"
+          className="mode-toggle"
+          onClick={() => { setShowTranscript(!showTranscript); setShowScenario(false); }}
+        >
+          {showTranscript ? "Back to chat" : "Transcript"}
+        </button>
       </div>
+
+      {showScenario ? (
+        <ScenarioCard scenario={scenario} />
+      ) : showTranscript ? (
+        <div className="chat-log">
+          {messages.map((m, i) => (
+            <div key={i} className={`chat-row ${m.from}`}>
+              {m.from === "mascot" && (
+                <Image src="/headshot.png" alt="" width={36} height={36} className="chat-avatar" />
+              )}
+              <div className={`chat-bubble ${m.tone ?? ""}`}>
+                <div>{m.text}</div>
+                {m.sub && <small>{m.sub}</small>}
+              </div>
+            </div>
+          ))}
+          <div ref={endRef} />
+        </div>
+      ) : (
+        <>
+          <div className="vn-stage">
+            <Image
+              key={mood}
+              src={SPRITES[mood]}
+              alt="Tambay"
+              width={180}
+              height={180}
+              className="vn-sprite"
+              priority
+            />
+          </div>
+          <div className="vn-box">
+            <div className="vn-name">Tambay</div>
+            {lines.map((m, i) => (
+              <div key={i} className={`vn-line ${m.tone ?? ""}`}>
+                {m.text}
+                {m.sub && <small>{m.sub}</small>}
+              </div>
+            ))}
+            {needsPrompt && <div className="vn-line">{step.prompt}</div>}
+          </div>
+        </>
+      )}
 
       {finished ? (
         <button

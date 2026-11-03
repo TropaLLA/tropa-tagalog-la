@@ -1,0 +1,35 @@
+html,
+body {
+  --bs-light-rgb: 236, 236, 236;
+  box-sizing: border-box;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+/* Possibly a template leftover. Keep it unless you confirm nothing uses it. */
+.wrapper {
+  box-sizing: border-box;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+:root {
+  --navy: #0f3b75;
+  --beige: #dfd3bd;
+  --yellow: #fddd2e;
+  --green: #6bbf74;
+  --teal: #5b8e9a;
+  --red: #ee4040;
+  --white: #ffffff;
+  --aqua: #1fc4c4;
+  --orange: #e8661f;
+}
+
+body {
+  background: var(--beige);
+  color: var(--navy);
+}
+
+.phone-frame { width: 100%; max-width: 430px; }

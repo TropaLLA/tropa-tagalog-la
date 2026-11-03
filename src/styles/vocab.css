@@ -1,0 +1,29 @@
+.vocab-section-title {
+  margin: 1.25rem 0 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.vocab-card { margin-bottom: 0.75rem; padding: 1rem; border-radius: 1.25rem; background: var(--white); }
+.vocab-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; }
+.vocab-word { margin: 0; font-size: 1.25rem; font-weight: 800; }
+.vocab-meaning { margin: 0; font-size: 0.9rem; }
+.vocab-actions { display: flex; flex-shrink: 0; gap: 0.5rem; }
+.vocab-actions .icon-btn { width: 2.5rem; height: 2.5rem; }
+.vocab-result { margin: 0.5rem 0 0; font-size: 0.85rem; font-weight: 700; }
+.vocab-result.ok { color: #2e7d32; }
+.vocab-result.bad { color: #c62828; }
+.vocab-example {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 1rem;
+  background: var(--beige);
+  font-size: 0.9rem;
+}
+.vocab-example small { display: block; opacity: 0.8; }
+.vocab-speak { padding: 0; border: none; background: none; color: var(--navy); }
+.vocab-grammar { margin: 0.5rem 0 0; font-size: 0.8rem; }

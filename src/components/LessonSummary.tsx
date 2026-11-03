@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import type { Lesson } from "@/lib/lessons";
+import type { Lesson, Scenario } from "@/lib/lessons";
 
 export type StepStats = {
   wrong: string[]; // every wrong answer they submitted
@@ -18,14 +18,16 @@ function headline(firstTry: number, total: number) {
 
 export default function LessonSummary({
   lesson,
+  scenario,
   stats,
   onRestart,
 }: {
   lesson: Lesson;
+  scenario: Scenario;
   stats: StepStats[];
   onRestart: () => void;
 }) {
-  const rows = lesson.steps.map((step, i) => ({
+  const rows = scenario.steps.map((step, i) => ({
     step,
     s: stats[i],
     clean: stats[i].wrong.length === 0 && !stats[i].hinted,
@@ -42,7 +44,7 @@ export default function LessonSummary({
       <div className="summary-hero">
         <Image src="/bird.png" alt="" width={96} height={96} />
         <h1>{headline(firstTry, total)}</h1>
-        <p>You finished {lesson.title}.</p>
+        <p>You finished “{scenario.title}”.</p>
       </div>
 
       <div className="stat-row">
@@ -93,7 +95,7 @@ export default function LessonSummary({
       )}
 
       <button type="button" className="login-btn login-btn-primary" onClick={onRestart}>
-        Practice again
+        {lesson.scenarios.length > 1 ? "Try another scenario" : "Practice again"}
       </button>
       <Link href={`/vocab/${lesson.slug}`} className="login-btn login-btn-secondary">
         Review the words

@@ -10,10 +10,11 @@ export default function LandingPage() {
       <div className="login-circle login-red" />
 
       <div className="login-form landing-content">
-        <Image src="/bird.png" alt="Mascot" width={120} height={120} className="login-bird" priority />
-        <h1 className="login-title">Welcome!</h1>
+        <Image src="/mascot.png" alt="Mascot" width={120} height={120} className="login-bird" priority />
+        <h1 className="login-title">Tropa!</h1>
+        <Image src="/logo.png" alt=" " width={120} height={120} className="login-bird" priority />
         <p className="landing-subtitle">
-          Your tagline goes here. Say what the app does in one short sentence.
+          Your pocket tropa for learning Tagalog!
         </p>
 
         <Link href="/auth/signup" className="login-btn login-btn-yellow login-link">

@@ -1,0 +1,175 @@
+/* ---------- Conversation (chat transcript) ---------- */
+.chat { display: flex; flex-direction: column; }
+.chat-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+.chat-back { color: var(--navy); font-weight: 700; text-decoration: none; }
+.chat-log {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-height: 40vh;
+  min-height: 40dvh;
+  max-height: 55vh;
+  max-height: 55dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0.5rem 0;
+}
+.chat-row { display: flex; align-items: flex-end; gap: 0.5rem; }
+.chat-row.me { justify-content: flex-end; }
+.chat-avatar { flex-shrink: 0; height: auto; }
+.chat-bubble {
+  max-width: 80%;
+  padding: 0.75rem 1rem;
+  border-radius: 1.25rem;
+  background: var(--white);
+  font-weight: 700;
+}
+.chat-row.me .chat-bubble { background: var(--navy); color: var(--white); }
+.chat-bubble small { display: block; margin-top: 0.25rem; font-weight: 600; white-space: pre-line; opacity: 0.85; }
+.chat-bubble.ok { background: var(--green); }
+.chat-bubble.error { background: #fde2e2; border: 2px solid var(--red); }
+.chat-bubble.hint { background: var(--yellow); }
+
+.chat-input { display: flex; align-items: center; gap: 0.5rem; padding-top: 0.75rem; }
+.chat-input .icon-btn { flex-shrink: 0; }
+.chat-field {
+  flex: 1;
+  min-width: 0;
+  height: 2.75rem;
+  padding: 0 1rem;
+  border: 2px solid var(--navy);
+  border-radius: 1.5rem;
+  background: var(--white);
+}
+
+/* ---------- Visual novel stage ---------- */
+.vn-toggles { display: flex; gap: .5rem; justify-content: flex-end; }
+
+.vn-stage {
+  height: 240px;
+  border-radius: 16px;
+  background: linear-gradient(#f9e7c2, #f1cf94);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+}
+.vn-sprite { height: 90%; width: auto; object-fit: contain; animation: vn-pop .25s ease-out; }
+@keyframes vn-pop {
+  from { transform: translateY(8px); opacity: .7; }
+  to { transform: none; opacity: 1; }
+}
+
+.vn-box {
+  position: relative;
+  margin-top: -1rem;
+  padding: 1.2rem 1.1rem .9rem;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .96);
+  border: 2px solid #222;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, .15);
+}
+.vn-name {
+  position: absolute;
+  top: -.9rem;
+  left: 1rem;
+  padding: .1rem .7rem;
+  border-radius: 999px;
+  background: #222;
+  color: #fff;
+  font-size: .8rem;
+  font-weight: 700;
+}
+.vn-line { font-size: 1.1rem; line-height: 1.4; margin-bottom: .4rem; }
+.vn-line.ok { color: #1a7f37; font-weight: 600; }
+.vn-line.error { color: #c62828; font-weight: 600; }
+.vn-line.hint { color: #8a6d00; font-weight: 600; }
+.vn-line small { display: block; font-weight: 400; white-space: pre-line; opacity: .85; }
+
+/* ---------- Lesson intro cards ---------- */
+.intro-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem 0;
+  padding: 1.5rem 1rem;
+  border-radius: 1.75rem;
+  background: var(--white);
+  text-align: center;
+}
+.intro-art {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 9rem;
+  border-radius: 1.25rem;
+  background: var(--aqua);
+}
+.intro-emoji { font-size: 4.5rem; line-height: 1; }
+.intro-word { margin: 0.5rem 0 0; font-size: 1.9rem; font-weight: 800; }
+.intro-phonetic { margin: 0; padding: 0.25rem 0.9rem; border-radius: 1rem; background: var(--yellow); font-weight: 700; }
+.intro-meaning { margin: 0; font-size: 1.05rem; }
+.intro-actions { display: flex; gap: 0.75rem; }
+.intro-actions .login-btn { flex: 1; margin-top: 0; }
+
+/* ---------- Tap to build ---------- */
+.tap-answer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 3.5rem;
+  padding: 0.6rem;
+  border: 2px dashed var(--navy);
+  border-radius: 1.25rem;
+  background: var(--white);
+}
+.tap-placeholder { font-size: 0.9rem; opacity: 0.6; }
+.tap-bank { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin: 0.75rem 0; }
+.tap-actions { display: flex; align-items: center; gap: 0.5rem; }
+.tap-actions .icon-btn { flex-shrink: 0; }
+.tap-actions .login-btn { flex: 1; height: 2.75rem; margin-top: 0; }
+
+/* ---------- Lesson summary ---------- */
+.summary-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 0.5rem 0 1rem;
+  text-align: center;
+}
+.summary-hero h1 { margin: 0.5rem 0 0; font-size: 2rem; font-weight: 800; }
+.summary-hero p { margin: 0; }
+.summary-title {
+  margin: 1.25rem 0 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.summary-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  margin-bottom: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-left: 0.5rem solid var(--green);
+  border-radius: 1rem;
+  background: var(--white);
+}
+.summary-row.bad { border-left-color: var(--red); }
+.summary-row small { opacity: 0.85; }
+
+/* ---------- Scenario briefing ---------- */
+.scenario-card { margin: 1rem 0; padding: 1.25rem; border-radius: 1.75rem; background: var(--white); }
+.scenario-head { display: flex; align-items: center; gap: 0.75rem; }
+.scenario-head h2 { margin: 0; font-size: 1.4rem; font-weight: 800; }
+.scenario-emoji { font-size: 2.25rem; line-height: 1; }
+.scenario-role { margin: 0.75rem 0 0; padding: 0.6rem 0.9rem; border-radius: 1rem; background: var(--aqua); font-weight: 700; }
+.scenario-label { margin: 1rem 0 0.25rem; font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; }
+.scenario-card ul { margin: 0; padding-left: 1.25rem; }
+.scenario-tip { margin: 0.75rem 0 0; font-size: 0.85rem; text-align: center; opacity: 0.8; }
+.scenario-toggle { margin: 0 auto 0.5rem; }
