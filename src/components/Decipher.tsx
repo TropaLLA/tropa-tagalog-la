@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { recordActivity } from "@/lib/progress";
 import { PUZZLES, isMatch, keyOf, wordsInOrder, type Puzzle } from "@/lib/decipher";
 import styles from "./Decipher.module.css";
 
@@ -239,6 +240,7 @@ export default function Decipher() {
       <PuzzleBoard
         key={puzzle.id}
         puzzle={puzzle}
+        onSolved={recordActivity}
         onNext={() => setIndex(last ? 0 : index + 1)}
         nextLabel={last ? "Play again" : "Next puzzle"}
       />

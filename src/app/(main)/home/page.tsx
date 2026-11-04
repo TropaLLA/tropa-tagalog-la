@@ -2,12 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useSyncExternalStore } from "react";
-import { liveStreak, loadDaily, todayKey, type DailyState } from "@/lib/daily";
+import { useEffect, useState, useSyncExternalStore } from "react";
+import { loadDaily, todayKey, type DailyState } from "@/lib/daily";
+import { ACHIEVEMENTS, ACHIEVEMENT_EVENT, liveStreak, loadProgress, type Progress } from "@/lib/progress";
 import TopBar from "@/components/TopBar";
 import styles from "./home.module.css";
 
-const EMPTY: DailyState = { lastDone: null, streak: 0, best: 0 };
+const EMPTY_DAILY: DailyState = { lastDone: null, streak: 0, best: 0 };
+const EMPTY_PROGRESS: Progress = { lastActive: null, streak: 0, best: 0, earned: {} };
 const noopSubscribe = () => () => {};
 
 function greetingFor(hour: number) {
@@ -16,22 +18,28 @@ function greetingFor(hour: number) {
   return "Magandang gabi!";
 }
 
-function Dashboard({ greeting, state }: { greeting: string; state: DailyState }) {
-  const streak = liveStreak(state);
-  const doneToday = state.lastDone === todayKey();
+type DashboardProps = { greeting: string; daily: DailyState; progress: Progress };
+
+function Dashboard({ greeting, daily, progress }: DashboardProps) {
+  const streak = liveStreak(progress);
+  const doneToday = daily.lastDone === todayKey(); // today's puzzle specifically
+  const activeToday = progress.lastActive === todayKey(); // any lesson, puzzle or game
+  const earnedCount = ACHIEVEMENTS.filter((a) => progress.earned[a.id]).length;
 
   let dailyTitle = "Today's puzzle";
   let dailyText = "Decode new Tagalog words from clues.";
   if (doneToday) {
     dailyTitle = "Tapos na!";
-    dailyText = "Come back tomorrow to keep your streak going.";
+    dailyText = "Come back tomorrow for a new puzzle.";
+  } else if (activeToday) {
+    dailyText = "Your streak is safe today. Solve it for extra practice.";
   } else if (streak > 0) {
     dailyTitle = "Keep your streak alive";
-    dailyText = `Solve today's puzzle to reach ${streak + 1} days.`;
+    dailyText = `Finish this puzzle or any lesson to reach ${streak + 1} days.`;
   }
 
   return (
-    <div className={styles.page}>
+    <div className={`${styles.page} stagger`}>
       <section className={styles.hero}>
         <div className={styles.heroText}>
           <h1 className={`${styles.greeting} title-screen`}>{greeting}</h1>
@@ -41,14 +49,16 @@ function Dashboard({ greeting, state }: { greeting: string; state: DailyState })
       </section>
 
       <div className="stat-row">
-        <div className="stat-card stat-yellow">
+        <Link href="/achievements" className="stat-card stat-yellow">
           <span>🔥 Streak</span>
           <strong>{streak}</strong>
-        </div>
-        <div className="stat-card stat-green">
+        </Link>
+        <Link href="/achievements" className="stat-card stat-green">
           <span>🏆 Achievements</span>
-          <strong>0</strong>
-        </div>
+          <strong>
+            {earnedCount}/{ACHIEVEMENTS.length}
+          </strong>
+        </Link>
       </div>
 
       <Link href="/lesson" className={styles.start}>
@@ -83,8 +93,15 @@ function Dashboard({ greeting, state }: { greeting: string; state: DailyState })
 // The greeting and streak depend on the player's clock and saved data, so they're only read in the browser.
 function ClientDashboard() {
   const [greeting] = useState(() => greetingFor(new Date().getHours()));
-  const [state] = useState(loadDaily);
-  return <Dashboard greeting={greeting} state={state} />;
+  const [daily] = useState(loadDaily);
+  const [progress, setProgress] = useState(loadProgress);
+  // Refresh the counts when a badge is earned while Home is open (e.g. Welcome on first visit).
+  useEffect(() => {
+    const refresh = () => setProgress(loadProgress());
+    window.addEventListener(ACHIEVEMENT_EVENT, refresh);
+    return () => window.removeEventListener(ACHIEVEMENT_EVENT, refresh);
+  }, []);
+  return <Dashboard greeting={greeting} daily={daily} progress={progress} />;
 }
 
 export default function HomePage() {
@@ -92,7 +109,8 @@ export default function HomePage() {
   return (
     <>
       <TopBar title="Home" />
-      {mounted ? <ClientDashboard /> : <Dashboard greeting="Kumusta!" state={EMPTY} />}
+      {/* Stable wrapper: swapping placeholder -> real dashboard shouldn't replay the fade-in. */}
+      <div>{mounted ? <ClientDashboard /> : <Dashboard greeting="Kumusta!" daily={EMPTY_DAILY} progress={EMPTY_PROGRESS} />}</div>
     </>
   );
 }

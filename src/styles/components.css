@@ -75,3 +75,65 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
+/* ---------- Achievements (toast + /achievements page) ---------- */
+.achv-icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--yellow);
+  color: var(--navy);
+}
+
+/* Sits just under the top bar, clear of the notch. pointer-events lets taps reach the page around it. */
+.achv-toast-wrap {
+  position: fixed;
+  top: calc(env(safe-area-inset-top) + 4.5rem);
+  left: 0;
+  right: 0;
+  z-index: 1030;
+  display: flex;
+  justify-content: center;
+  padding: 0 1rem;
+  pointer-events: none;
+}
+.achv-toast {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 400px;
+  padding: 0.6rem 0.75rem;
+  border: 2px solid var(--navy);
+  border-radius: 1rem;
+  background: var(--white);
+  color: var(--navy);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  pointer-events: auto;
+}
+.achv-toast-text { flex: 1; display: flex; flex-direction: column; line-height: 1.2; }
+.achv-toast-text small { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; opacity: 0.75; }
+.achv-toast-text strong { font-size: 1rem; }
+
+.achv-note { margin: 0 0 1rem; font-size: 0.85rem; opacity: 0.8; }
+.achv-list { display: flex; flex-direction: column; gap: 0.75rem; margin: 0.75rem 0 1rem; padding: 0; list-style: none; }
+.achv-item {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.9rem 1rem;
+  border-radius: 1.25rem;
+  background: var(--white);
+}
+.achv-item strong { display: block; }
+.achv-item p { margin: 0; font-size: 0.85rem; }
+.achv-item small { font-size: 0.75rem; font-weight: 700; opacity: 0.7; }
+.achv-item.locked { background: rgba(255, 255, 255, 0.5); }
+.achv-item.locked .achv-icon { background: rgba(15, 59, 117, 0.12); }
+
+/* Home stat cards link here */
+a.stat-card { color: var(--navy); text-decoration: none; }
+a.stat-card:hover { color: var(--navy); filter: brightness(0.96); }

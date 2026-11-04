@@ -1,3 +1,6 @@
+// Tracks whether today's Tambay Daily puzzle is done. The app-wide streak and
+// achievements live in progress.ts (any lesson, puzzle or game counts there).
+
 export type DailyState = { lastDone: string | null; streak: number; best: number };
 
 const KEY = "tropa-daily";
@@ -7,7 +10,7 @@ export function todayKey(d = new Date()): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-function yesterdayKey(): string {
+export function yesterdayKey(): string {
   const d = new Date();
   d.setDate(d.getDate() - 1);
   return todayKey(d);

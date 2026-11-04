@@ -4,7 +4,8 @@ import { useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { puzzleOfTheDay } from "@/lib/decipher";
-import { completeToday, liveStreak, loadDaily, todayKey } from "@/lib/daily";
+import { completeToday, loadDaily, todayKey } from "@/lib/daily";
+import { liveStreak, loadProgress, recordActivity } from "@/lib/progress";
 import { PuzzleBoard } from "./Decipher";
 import board from "./Decipher.module.css";
 import styles from "./Daily.module.css";
@@ -20,13 +21,13 @@ function DailyToday() {
     new Date().toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" }),
   );
   const [initial] = useState(loadDaily);
-  const [state, setState] = useState(initial);
   const [alreadyDone] = useState(initial.lastDone === todayKey());
+  const [progress, setProgress] = useState(loadProgress);
 
   return (
     <div className={board.wrap}>
       <div className={board.top}>
-        <span className={styles.streak}>🔥 {dayLabel(liveStreak(state))}</span>
+        <span className={styles.streak}>🔥 {dayLabel(liveStreak(progress))}</span>
       </div>
       <p className={styles.date}>Tambay Daily · {label}</p>
 
@@ -36,7 +37,7 @@ function DailyToday() {
           <h1>Tapos na!</h1>
           <p>Magaling! You finished today&apos;s puzzle. Balik ka bukas!</p>
           <p className={styles.doneStats}>
-            🔥 {dayLabel(liveStreak(state))} · Best: {dayLabel(state.best)}
+            🔥 {dayLabel(liveStreak(progress))} · Best: {dayLabel(progress.best)}
           </p>
           <div className={styles.doneActions}>
             <Link href="/decipher" className="login-btn login-btn-yellow">
@@ -50,7 +51,11 @@ function DailyToday() {
       ) : (
         <PuzzleBoard
           puzzle={puzzle}
-          onSolved={() => setState(completeToday())}
+          onSolved={() => {
+            completeToday(); // marks the puzzle done for today
+            recordActivity();
+            setProgress(loadProgress());
+          }}
           onNext={() => router.push("/home")}
           nextLabel="Done"
         />

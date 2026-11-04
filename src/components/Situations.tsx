@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { recordActivity } from "@/lib/progress";
 import { POINTS, SITUATIONS, type Rating } from "@/lib/situations";
 import styles from "./Situations.module.css";
 
@@ -35,6 +36,7 @@ export default function Situations() {
   function next() {
     if (last) {
       setFinished(true);
+      recordActivity(); // finishing a round counts toward the streak
     } else {
       setIndex(index + 1);
       setPicked(null);
