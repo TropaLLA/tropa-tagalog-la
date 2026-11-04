@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
 import { PUZZLES, isMatch, keyOf, wordsInOrder, type Puzzle } from "@/lib/decipher";
 import styles from "./Decipher.module.css";
 
@@ -233,9 +232,6 @@ export default function Decipher() {
   return (
     <div className={styles.wrap}>
       <div className={styles.top}>
-        <Link href="/lesson" className={styles.back}>
-          ← Lessons
-        </Link>
         <span className={styles.count}>
           Puzzle {index + 1}/{PUZZLES.length}
         </span>

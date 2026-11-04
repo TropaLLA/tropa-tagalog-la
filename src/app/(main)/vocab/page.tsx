@@ -2,6 +2,7 @@ import Link from "next/link";
 import { GeoAlt, EggFried, ChatQuote } from "react-bootstrap-icons";
 import { VOCAB } from "@/lib/vocab";
 import MascotSays from "@/components/MascotSays";
+import TopBar from "@/components/TopBar";
 
 const look = {
   travel: { Icon: GeoAlt, color: "vocab-hub-card--aqua" },
@@ -12,7 +13,7 @@ const look = {
 export default function VocabHubPage() {
   return (
     <>
-      <h1 className="page-heading">Vocab</h1>
+      <TopBar title="Vocab" />
       <MascotSays tagalog="Tara, mag-aral tayo ng mga salita!" english="Let's learn some words today!" />
       <div className="vocab-row">
         {VOCAB.map((theme) => {

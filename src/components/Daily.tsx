@@ -26,9 +26,6 @@ function DailyToday() {
   return (
     <div className={board.wrap}>
       <div className={board.top}>
-        <Link href="/home" className={board.back}>
-          ← Home
-        </Link>
         <span className={styles.streak}>🔥 {dayLabel(liveStreak(state))}</span>
       </div>
       <p className={styles.date}>Tambay Daily · {label}</p>

@@ -10,8 +10,41 @@
 .app-content { flex: 1; padding: 0 1.25rem; }
 .page-heading { font-weight: 800; }
 
-/* Top bar + hamburger menu */
-.topbar { display: flex; align-items: center; justify-content: flex-end; padding: 1.25rem; }
+/* Top bar: back | title | menu. Sticks to the top of the scrolling <main> in AppShell.
+   Negative side margins let it span the full width past .app-content's padding.
+   padding-top clears phone notches (needs viewportFit: "cover" in app/layout.tsx). */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+  display: grid;
+  grid-template-columns: 2.75rem 1fr 2.75rem;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 -1.25rem 1rem;
+  padding: calc(0.6rem + env(safe-area-inset-top)) calc(1rem + env(safe-area-inset-right)) 0.6rem
+    calc(1rem + env(safe-area-inset-left));
+  background: var(--navy);
+  color: var(--white);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.topbar-title {
+  margin: 0;
+  overflow: hidden;
+  font-size: 1.2rem;
+  font-weight: 800;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.topbar-slot { width: 2.75rem; height: 2.75rem; }
+.topbar .icon-btn {
+  border-color: var(--white);
+  background: transparent;
+  color: var(--white);
+}
+.topbar .icon-btn:hover,
+.topbar .icon-btn:focus-visible { background: rgba(255, 255, 255, 0.15); color: var(--white); }
 .menu-item { display: flex; align-items: center; gap: 0.6rem; color: var(--navy); font-weight: 700; }
 
 /* Home */
@@ -47,7 +80,7 @@
 /* Bottom tabs */
 .bottom-nav {
   position: sticky;
-  bottom: 1rem;
+  bottom: calc(1rem + env(safe-area-inset-bottom));
   display: flex;
   gap: 0.25rem;
   margin: 1rem;
