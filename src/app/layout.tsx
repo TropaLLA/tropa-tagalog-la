@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "./globals.css";
 import Providers from './providers';
 import AppShell from "@/components/AppShell";
+import { quiapo, cubao, kagitingan } from "./fonts";
 
 
 const geistSans = Geist({
@@ -28,7 +29,7 @@ export default function RootLayout({
 }>) {
   const classString = `${geistSans.variable} ${geistMono.variable} wrapper`;
   return (
-    <html lang="en">
+    <html lang="en" className={`${quiapo.variable} ${cubao.variable} ${kagitingan.variable}`}>
       <body className={classString}>
         <Providers>
           <AppShell>{children}</AppShell>
