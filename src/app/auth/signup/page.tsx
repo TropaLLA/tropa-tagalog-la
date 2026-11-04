@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
+import { createUser } from "@/lib/dbActions";
 
 export default function SignUpPage() {
   const [email, setEmail] = useState("");
@@ -18,7 +20,12 @@ export default function SignUpPage() {
       setError("Passwords don't match.");
       return;
     }
-    // TODO: create the user (next step), then sign them in
+        try {
+      await createUser({ email, password });
+      await signIn("credentials", { email, password, callbackUrl: "/home" });
+    } catch {
+      setError("Couldn't create that account. The email may already be in use.");
+    }
   }
 
   return (
