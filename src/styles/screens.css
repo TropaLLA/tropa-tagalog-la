@@ -100,10 +100,12 @@
   scroll-snap-type: x mandatory;
   scroll-padding-inline: 0.25rem;
   padding: 0.75rem 0.25rem 1rem; /* room for the hover lift and shadow */
-  scrollbar-width: none; /* Firefox */
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: var(--navy) transparent;
   -webkit-overflow-scrolling: touch;
 }
-.vocab-row::-webkit-scrollbar { display: none; } /* Chrome, Safari */
+.vocab-row::-webkit-scrollbar { height: 8px; } /* Chrome, Safari */
+.vocab-row::-webkit-scrollbar-thumb { background: var(--navy); border-radius: 999px; }
 .vocab-hub-card {
   --card-color: var(--aqua);
   flex: 0 0 min(70vw, 260px);
