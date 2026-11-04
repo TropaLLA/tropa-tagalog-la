@@ -71,7 +71,7 @@ function Dashboard({ greeting, state }: { greeting: string; state: DailyState })
         <div className={styles.cardBody}>
           <span className={styles.tag}>Call Tambay</span>
           <h3>Share a photo, chat in Tagalog</h3>
-          <p>Show him your food or your surroundings and he&apos;ll talk about it with you.</p>
+          <p>Show your food or your surroundings</p>
         </div>
         <span className={styles.chevron}>›</span>
       </Link>
