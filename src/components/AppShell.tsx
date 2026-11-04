@@ -3,8 +3,9 @@
 import { usePathname } from "next/navigation";
 import NavBar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import AchievementToaster from "@/components/AchievementToaster";
 
-const NO_CHROME = ["/auth", "/home", "/vocab", "/lesson", "/settings", "/call", "/decipher", "/daily", "/situations"];
+const NO_CHROME = ["/auth", "/home", "/vocab", "/lesson", "/settings", "/achievements", "/call", "/decipher", "/daily", "/situations"];
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -23,6 +24,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         {children}
       </main>
       {!hideChrome && <Footer />}
+      {/* Signed-in screens: earns Welcome on first visit and shows achievement toasts. */}
+      <AchievementToaster trackVisit={hideChrome && pathname !== "/" && !pathname.startsWith("/auth")} />
     </div>
   );
 }

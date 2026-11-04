@@ -8,7 +8,7 @@ import IntroCards from "@/components/IntroCards";
 import LessonSummary, { type StepStats } from "@/components/LessonSummary";
 import ScenarioCard from "@/components/ScenarioCard";
 import TopBar from "@/components/TopBar";
-import { completeToday } from "@/lib/daily";
+import { recordActivity } from "@/lib/progress";
 import { listen } from "@/lib/speech";
 import { normalize, type Lesson, type Scenario } from "@/lib/lessons";
 import Reflection from "@/components/Reflection";
@@ -128,7 +128,7 @@ export default function Conversation({ lesson }: { lesson: Lesson }) {
       } else {
         added.push({ from: "mascot", text: lesson.outro });
         setFinished(true);
-        completeToday(); // finishing a lesson counts toward the home streak
+        recordActivity(); // finishing a lesson counts toward the streak
       }
     } else {
       const known = step.mistakes?.find((m) => clean.includes(normalize(m.contains)));
