@@ -1,0 +1,70 @@
+/* ---------- Motion ----------
+   Everything here sits inside `no-preference`, so people who turn on
+   "Reduce motion" on their phone or computer get no animation at all.
+
+   How page transitions work: a CSS animation plays whenever an element is
+   added to the page. On navigation, Next.js swaps the page's elements inside
+   .app-content, so the new page's elements fade in. No JavaScript or
+   experimental Next.js feature is involved.
+
+   `backwards` (not `both`) means the animation lets go of `transform` once
+   it ends, so hover/press effects on the same elements still work. */
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes page-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes rise-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes pop-in {
+    from { opacity: 0; transform: scale(0.96); }
+    to { opacity: 1; transform: none; }
+  }
+
+  /* 1. Page change: fade the new page in. The top bar is left out so the
+     navy bar stays put instead of flashing. Opacity only (no transform), so
+     fixed-position popups like the "leave lesson?" dialog aren't affected. */
+  .app-content > :not(.topbar) {
+    animation: page-in 220ms ease-out backwards;
+  }
+
+  /* 2. Cards appearing: rise in one after another. */
+  .stagger > *,
+  .stat-row > *,
+  .module-list > *,
+  .vocab-row > *,
+  .vocab-card {
+    animation: rise-in 320ms ease-out backwards;
+  }
+  .stagger > :nth-child(2), .stat-row > :nth-child(2), .module-list > :nth-child(2), .vocab-row > :nth-child(2), .vocab-card:nth-of-type(2) { animation-delay: 50ms; }
+  .stagger > :nth-child(3), .stat-row > :nth-child(3), .module-list > :nth-child(3), .vocab-row > :nth-child(3), .vocab-card:nth-of-type(3) { animation-delay: 100ms; }
+  .stagger > :nth-child(4), .module-list > :nth-child(4), .vocab-row > :nth-child(4), .vocab-card:nth-of-type(4) { animation-delay: 150ms; }
+  .stagger > :nth-child(5), .module-list > :nth-child(5), .vocab-card:nth-of-type(5) { animation-delay: 200ms; }
+  .stagger > :nth-child(n + 6), .module-list > :nth-child(n + 6), .vocab-card:nth-of-type(n + 6) { animation-delay: 250ms; }
+
+  /* Popups: the "leave lesson?" dialog and the top bar menu. */
+  .leave-overlay { animation: page-in 160ms ease-out; }
+  .leave-card { animation: pop-in 200ms ease-out; }
+  .topbar .dropdown-menu.show { animation: pop-in 140ms ease-out; transform-origin: top right; }
+
+  /* 3. Button press: a slight shrink while the finger or mouse is down. */
+  button,
+  .login-btn,
+  .icon-btn,
+  .module-card,
+  .bottom-nav-item {
+    transition: transform 120ms ease;
+  }
+  button:not(:disabled):active,
+  .login-btn:active,
+  .icon-btn:active,
+  .module-card:active,
+  .bottom-nav-item:active {
+    transform: scale(0.97);
+  }
+  /* Vocab cards already lift on hover (screens.css); keep the lift while pressing. */
+  .vocab-hub-card:active { transform: translateY(-6px) scale(0.98); }
+}

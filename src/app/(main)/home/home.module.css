@@ -113,3 +113,9 @@
   box-shadow: 0 4px 0 rgba(27, 21, 48, 0.4);
 }
 .call .cardIcon { background: rgba(255, 255, 255, 0.16); }
+
+/* Press-down on the Today / Tambay cards (see src/styles/motion.css). */
+@media (prefers-reduced-motion: no-preference) {
+  .card { transition: transform 120ms ease; }
+  .card:active { transform: scale(0.98); }
+}

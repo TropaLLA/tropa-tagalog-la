@@ -31,7 +31,7 @@ function Dashboard({ greeting, state }: { greeting: string; state: DailyState })
   }
 
   return (
-    <div className={styles.page}>
+    <div className={`${styles.page} stagger`}>
       <section className={styles.hero}>
         <div className={styles.heroText}>
           <h1 className={`${styles.greeting} title-screen`}>{greeting}</h1>
@@ -92,7 +92,8 @@ export default function HomePage() {
   return (
     <>
       <TopBar title="Home" />
-      {mounted ? <ClientDashboard /> : <Dashboard greeting="Kumusta!" state={EMPTY} />}
+      {/* Stable wrapper: swapping placeholder -> real dashboard shouldn't replay the fade-in. */}
+      <div>{mounted ? <ClientDashboard /> : <Dashboard greeting="Kumusta!" state={EMPTY} />}</div>
     </>
   );
 }

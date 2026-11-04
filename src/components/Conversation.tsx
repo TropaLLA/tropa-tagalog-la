@@ -95,15 +95,17 @@ export default function Conversation({ lesson }: { lesson: Lesson }) {
 
   if (phase === "brief") {
     return (
-      <div>
+      <>
         <TopBar title={lesson.title} backHref="/lesson" />
-        <p className="chat-progress">Your mission</p>
-        <ScenarioCard scenario={scenario} />
-        <button type="button" className="login-btn login-btn-primary" onClick={() => setPhase("chat")}>
-          Start
-        </button>
-        <p className="scenario-tip">Tap “Scenario” during the chat to read this again.</p>
-      </div>
+        <div>
+          <p className="chat-progress">Your mission</p>
+          <ScenarioCard scenario={scenario} />
+          <button type="button" className="login-btn login-btn-primary" onClick={() => setPhase("chat")}>
+            Start
+          </button>
+          <p className="scenario-tip">Tap “Scenario” during the chat to read this again.</p>
+        </div>
+      </>
     );
   }
 
@@ -251,187 +253,190 @@ export default function Conversation({ lesson }: { lesson: Lesson }) {
   const mood = finished || lastTone === "ok" ? "happy" : lastTone === "error" ? "confused" : "neutral";
 
   return (
-    <div className="chat">
-      {/* Mid-lesson, the back arrow asks before leaving; once finished it just goes. */}
+    <>
+      {/* Mid-lesson, the back arrow asks before leaving; once finished it just goes.
+          The bar sits outside .chat so the page fade-in (motion.css) doesn't fade it. */}
       <TopBar
         title={scenario.title}
         backHref="/lesson"
         onBack={finished ? undefined : () => setShowLeave(true)}
       />
-      <p className="chat-progress">{finished ? steps.length : index + 1}/{steps.length}</p>
+      <div className="chat">
+        <p className="chat-progress">{finished ? steps.length : index + 1}/{steps.length}</p>
 
-      <div className="vn-toggles">
-        <button
-          type="button"
-          className="mode-toggle"
-          onClick={() => { setShowScenario(!showScenario); setShowTranscript(false); }}
-        >
-          {showScenario ? "Back to chat" : "Scenario"}
-        </button>
-        <button
-          type="button"
-          className="mode-toggle"
-          onClick={() => { setShowTranscript(!showTranscript); setShowScenario(false); }}
-        >
-          {showTranscript ? "Back to chat" : "Transcript"}
-        </button>
-      </div>
-
-      {showScenario ? (
-        <ScenarioCard scenario={scenario} />
-      ) : showTranscript ? (
-        <div className="chat-log">
-          {messages.map((m, i) => (
-            <div key={i} className={`chat-row ${m.from}`}>
-              {m.from === "mascot" && (
-                <Image src="/headshot.png" alt="" width={36} height={36} className="chat-avatar" />
-              )}
-              <div className={`chat-bubble ${m.tone ?? ""}`}>
-                <div>{m.text}</div>
-                {m.sub && <small>{m.sub}</small>}
-              </div>
-            </div>
-          ))}
-          <div ref={endRef} />
-        </div>
-      ) : (
-        <>
-          <div
-            className="vn-stage"
-            style={
-              scenario.background
-                ? { backgroundImage: `url(${scenario.background})`, backgroundSize: "cover", backgroundPosition: "center" }
-                : undefined
-            }
-          >
-            <Image
-              key={mood}
-              src={SPRITES[mood]}
-              alt="Tambay"
-              width={180}
-              height={180}
-              className="vn-sprite"
-              priority
-            />
-          </div>
-          <div className="vn-box">
-            <div className="vn-name">Tambay</div>
-            {lines.map((m, i) => (
-              <div key={i} className={`vn-line ${m.tone ?? ""}`}>
-                {m.text}
-                {m.sub && <small>{m.sub}</small>}
-              </div>
-            ))}
-            {needsPrompt && <div className="vn-line">{step.prompt}</div>}
-          </div>
-        </>
-      )}
-
-      {finished ? (
-        <button
-          type="button"
-          className="login-btn login-btn-yellow"
-          onClick={() => setShowSummary(true)}
-        >
-          See my results
-        </button>
-      ) : (
-        <>
-          {mode === "tap" ? (
-            <div>
-              <div className="tap-answer">
-                {picked.length === 0 && <span className="tap-placeholder">Tap the words in order</span>}
-                {picked.map((id) => (
-                  <button
-                    key={id}
-                    type="button"
-                    className="tile tile-picked"
-                    onClick={() => setPicked(picked.filter((p) => p !== id))}
-                  >
-                    {tileText(id)}
-                  </button>
-                ))}
-              </div>
-
-              <div className="tap-bank">
-                {tiles
-                  .filter((t) => !picked.includes(t.id))
-                  .map((t) => (
-                    <button
-                      key={t.id}
-                      type="button"
-                      className="tile"
-                      onClick={() => setPicked([...picked, t.id])}
-                    >
-                      {t.text}
-                    </button>
-                  ))}
-              </div>
-
-              <div className="tap-actions">
-                <button type="button" className="icon-btn" onClick={showHint} aria-label="Hint">
-                  <Lightbulb size={20} />
-                </button>
-                <button
-                  type="button"
-                  className="login-btn login-btn-primary"
-                  onClick={checkTiles}
-                  disabled={picked.length === 0}
-                >
-                  Check
-                </button>
-              </div>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="chat-input">
-              <button type="button" className="icon-btn" onClick={showHint} aria-label="Hint">
-                <Lightbulb size={20} />
-              </button>
-              <input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Type or tap the mic…"
-                className="chat-field"
-              />
-              <button
-                type="button"
-                className={`icon-btn${listening ? " listening" : ""}`}
-                onClick={startListening}
-                aria-label="Speak"
-              >
-                <Mic size={20} />
-              </button>
-              <button type="submit" className="icon-btn send" aria-label="Send">
-                <SendFill size={18} />
-              </button>
-            </form>
-          )}
-
+        <div className="vn-toggles">
           <button
             type="button"
             className="mode-toggle"
-            onClick={() => setMode(mode === "tap" ? "type" : "tap")}
+            onClick={() => { setShowScenario(!showScenario); setShowTranscript(false); }}
           >
-            {mode === "tap" ? "Type instead" : "Tap words instead"}
+            {showScenario ? "Back to chat" : "Scenario"}
           </button>
-        </>
-      )}
-
-      {showLeave && (
-        <div className="leave-overlay" role="dialog" aria-modal="true">
-          <div className="leave-card">
-            <Image src="/headshot.png" alt="" width={64} height={64} className="chat-avatar" />
-            <h2>Aalis ka na?</h2>
-            <p>Are you sure you want to go back? Your progress in this lesson won&apos;t be saved.</p>
-            <button type="button" className="login-btn login-btn-primary" onClick={() => setShowLeave(false)}>
-              Stay and keep practicing
-            </button>
-            <button type="button" className="mode-toggle" onClick={() => router.push("/lesson")}>
-              Leave lesson
-            </button>
-          </div>
+          <button
+            type="button"
+            className="mode-toggle"
+            onClick={() => { setShowTranscript(!showTranscript); setShowScenario(false); }}
+          >
+            {showTranscript ? "Back to chat" : "Transcript"}
+          </button>
         </div>
-      )}
-    </div>
+
+        {showScenario ? (
+          <ScenarioCard scenario={scenario} />
+        ) : showTranscript ? (
+          <div className="chat-log">
+            {messages.map((m, i) => (
+              <div key={i} className={`chat-row ${m.from}`}>
+                {m.from === "mascot" && (
+                  <Image src="/headshot.png" alt="" width={36} height={36} className="chat-avatar" />
+                )}
+                <div className={`chat-bubble ${m.tone ?? ""}`}>
+                  <div>{m.text}</div>
+                  {m.sub && <small>{m.sub}</small>}
+                </div>
+              </div>
+            ))}
+            <div ref={endRef} />
+          </div>
+        ) : (
+          <>
+            <div
+              className="vn-stage"
+              style={
+                scenario.background
+                  ? { backgroundImage: `url(${scenario.background})`, backgroundSize: "cover", backgroundPosition: "center" }
+                  : undefined
+              }
+            >
+              <Image
+                key={mood}
+                src={SPRITES[mood]}
+                alt="Tambay"
+                width={180}
+                height={180}
+                className="vn-sprite"
+                priority
+              />
+            </div>
+            <div className="vn-box">
+              <div className="vn-name">Tambay</div>
+              {lines.map((m, i) => (
+                <div key={i} className={`vn-line ${m.tone ?? ""}`}>
+                  {m.text}
+                  {m.sub && <small>{m.sub}</small>}
+                </div>
+              ))}
+              {needsPrompt && <div className="vn-line">{step.prompt}</div>}
+            </div>
+          </>
+        )}
+
+        {finished ? (
+          <button
+            type="button"
+            className="login-btn login-btn-yellow"
+            onClick={() => setShowSummary(true)}
+          >
+            See my results
+          </button>
+        ) : (
+          <>
+            {mode === "tap" ? (
+              <div>
+                <div className="tap-answer">
+                  {picked.length === 0 && <span className="tap-placeholder">Tap the words in order</span>}
+                  {picked.map((id) => (
+                    <button
+                      key={id}
+                      type="button"
+                      className="tile tile-picked"
+                      onClick={() => setPicked(picked.filter((p) => p !== id))}
+                    >
+                      {tileText(id)}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="tap-bank">
+                  {tiles
+                    .filter((t) => !picked.includes(t.id))
+                    .map((t) => (
+                      <button
+                        key={t.id}
+                        type="button"
+                        className="tile"
+                        onClick={() => setPicked([...picked, t.id])}
+                      >
+                        {t.text}
+                      </button>
+                    ))}
+                </div>
+
+                <div className="tap-actions">
+                  <button type="button" className="icon-btn" onClick={showHint} aria-label="Hint">
+                    <Lightbulb size={20} />
+                  </button>
+                  <button
+                    type="button"
+                    className="login-btn login-btn-primary"
+                    onClick={checkTiles}
+                    disabled={picked.length === 0}
+                  >
+                    Check
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="chat-input">
+                <button type="button" className="icon-btn" onClick={showHint} aria-label="Hint">
+                  <Lightbulb size={20} />
+                </button>
+                <input
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="Type or tap the mic…"
+                  className="chat-field"
+                />
+                <button
+                  type="button"
+                  className={`icon-btn${listening ? " listening" : ""}`}
+                  onClick={startListening}
+                  aria-label="Speak"
+                >
+                  <Mic size={20} />
+                </button>
+                <button type="submit" className="icon-btn send" aria-label="Send">
+                  <SendFill size={18} />
+                </button>
+              </form>
+            )}
+
+            <button
+              type="button"
+              className="mode-toggle"
+              onClick={() => setMode(mode === "tap" ? "type" : "tap")}
+            >
+              {mode === "tap" ? "Type instead" : "Tap words instead"}
+            </button>
+          </>
+        )}
+
+        {showLeave && (
+          <div className="leave-overlay" role="dialog" aria-modal="true">
+            <div className="leave-card">
+              <Image src="/headshot.png" alt="" width={64} height={64} className="chat-avatar" />
+              <h2>Aalis ka na?</h2>
+              <p>Are you sure you want to go back? Your progress in this lesson won&apos;t be saved.</p>
+              <button type="button" className="login-btn login-btn-primary" onClick={() => setShowLeave(false)}>
+                Stay and keep practicing
+              </button>
+              <button type="button" className="mode-toggle" onClick={() => router.push("/lesson")}>
+                Leave lesson
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
   );
 }
