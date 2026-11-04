@@ -10,9 +10,14 @@ export default function LandingPage() {
       <div className="login-circle login-red" />
 
       <div className="login-form landing-content">
-        <Image src="/mascot.png" alt="Mascot" width={120} height={120} className="login-bird" priority />
-        <h1 className="login-title">Tropa!</h1>
-        <Image src="/logo.png" alt=" " width={120} height={120} className="login-bird" priority />
+        <div className="landing-hero">
+          <Image src="/titles.png" alt="Tropa mascot" width={300} height={450} className="landing-mascot" priority />
+          <div className="landing-brand">
+            <Image src="/logo.png" alt="Tropa logo" width={300} height={300} className="landing-logo" priority />
+            <h1 className="login-title title-screen">Tropa!</h1>
+          </div>
+        </div>
+
         <p className="landing-subtitle">
           Your pocket tropa for learning Tagalog!
         </p>

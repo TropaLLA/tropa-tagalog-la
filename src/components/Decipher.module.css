@@ -1,8 +1,32 @@
 .wrap { display: flex; flex-direction: column; gap: 0.9rem; padding: 0 0 2rem; }
-.top { display: flex; justify-content: flex-end; align-items: center; }
 .count { font-size: 0.85rem; font-weight: 700; opacity: 0.8; }
 .title { margin: 0; font-size: 1.6rem; font-weight: 800; }
-.intro { margin: 0; font-size: 0.9rem; }
+
+.header { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
+.headerSide { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+.infoBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 2px solid var(--navy);
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--navy);
+}
+.infoBtn[aria-expanded="true"] { background: var(--navy); color: var(--white); }
+.intro {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--navy);
+  border-radius: 1rem;
+  background: var(--yellow);
+  font-size: 0.9rem;
+  animation: introIn 0.2s ease-out;
+}
+@keyframes introIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .intro { animation: none; } }
 
 .clue {
   display: flex;

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { recordActivity } from "@/lib/progress";
 import { PUZZLES, isMatch, keyOf, wordsInOrder, type Puzzle } from "@/lib/decipher";
+import { InfoCircle } from "react-bootstrap-icons";
 import styles from "./Decipher.module.css";
 
 // Difficulty knobs. Flip SHOW_WHICH to true if players find it too harsh.
@@ -16,11 +17,13 @@ export function PuzzleBoard({
   onNext,
   nextLabel,
   onSolved,
+  progress,
 }: {
   puzzle: Puzzle;
   onNext: () => void;
   nextLabel: string;
   onSolved?: () => void;
+  progress?: string;
 }) {
   const order = useMemo(() => wordsInOrder(puzzle), [puzzle]);
 
@@ -32,6 +35,7 @@ export function PuzzleBoard({
   const [hints, setHints] = useState(0);
   const [solved, setSolved] = useState(false);
   const [focusTick, setFocusTick] = useState(0);
+  const [showHelp, setShowHelp] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Focus the guess box only after the player does something, never on first load.
@@ -90,11 +94,27 @@ export function PuzzleBoard({
 
   return (
     <>
-      <h1 className={styles.title}>{puzzle.title}</h1>
-      <p className={styles.intro}>
-        Work out what the yellow words mean. Some sentences come with a translation and some don&apos;t, so compare
-        sentences and use the pictures. Type your own guess for each word.
-      </p>
+      <div className={styles.header}>
+        <h1 className={styles.title}>{puzzle.title}</h1>
+        <div className={styles.headerSide}>
+          {progress && <span className={styles.count}>{progress}</span>}
+          <button
+            type="button"
+            className={styles.infoBtn}
+            aria-label="How to play"
+            aria-expanded={showHelp}
+            onClick={() => setShowHelp((s) => !s)}
+          >
+            <InfoCircle size={18} />
+          </button>
+        </div>
+      </div>
+      {showHelp && (
+        <p className={styles.intro}>
+          Work out what the yellow words mean. Some sentences come with a translation and some don&apos;t, so compare
+          sentences and use the pictures. Type your own guess for each word.
+        </p>
+      )}
 
       {puzzle.clues.map((clue, i) => (
         <div key={i} className={styles.clue}>
@@ -232,14 +252,10 @@ export default function Decipher() {
 
   return (
     <div className={styles.wrap}>
-      <div className={styles.top}>
-        <span className={styles.count}>
-          Puzzle {index + 1}/{PUZZLES.length}
-        </span>
-      </div>
       <PuzzleBoard
         key={puzzle.id}
         puzzle={puzzle}
+        progress={`${index + 1}/${PUZZLES.length}`}
         onSolved={recordActivity}
         onNext={() => setIndex(last ? 0 : index + 1)}
         nextLabel={last ? "Play again" : "Next puzzle"}

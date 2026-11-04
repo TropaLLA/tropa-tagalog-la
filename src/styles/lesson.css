@@ -43,26 +43,39 @@
 }
 
 /* ---------- Visual novel stage ---------- */
-.vn-toggles { display: flex; gap: .5rem; justify-content: flex-end; }
+  .vn-toggles { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-bottom: .75rem; }
+  .vn-toggles .chat-progress { margin: 0; }
 
 .vn-stage {
-  height: 240px;
+  position: relative;
+  height: clamp(290px, 42dvh, 360px);
+  margin-bottom: 1rem;
+  padding: 0 1rem;
   border-radius: 16px;
   background: linear-gradient(#f9e7c2, #f1cf94);
   display: flex;
-  align-items: flex-end;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-end;
   overflow: hidden;
 }
-.vn-sprite { height: 90%; width: auto; object-fit: contain; animation: vn-pop .25s ease-out; }
+.vn-sprite {
+  position: absolute;
+  top: 3%;
+  left: 50%;
+  height: 150%;
+  width: auto;
+  max-width: none;
+  transform: translateX(-50%);
+  animation: vn-pop .25s ease-out;
+}
 @keyframes vn-pop {
-  from { transform: translateY(8px); opacity: .7; }
-  to { transform: none; opacity: 1; }
+  from { transform: translateX(-50%) translateY(8px); opacity: .7; }
+  to { transform: translateX(-50%); opacity: 1; }
 }
 
 .vn-box {
   position: relative;
-  margin-top: -1rem;
+  margin: 0 0 1.25rem;
   padding: 1.2rem 1.1rem .9rem;
   border-radius: 14px;
   background: rgba(255, 255, 255, .96);
@@ -120,7 +133,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem;
-  min-height: 3.5rem;
+  min-height: 4.25rem;
   padding: 0.6rem;
   border: 2px dashed var(--navy);
   border-radius: 1.25rem;
@@ -205,3 +218,33 @@
 .leave-card h2 { margin: 0.5rem 0 0; font-size: 1.5rem; font-weight: 800; }
 .leave-card p { margin: 0 0 0.5rem; }
 .leave-card .login-btn { width: 100%; }
+
+.vn-toggles { margin-bottom: 1.25rem; }
+
+.vn-box {
+  margin: 0;
+}
+
+.tile-used { visibility: hidden; }
+
+.hint-perch {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 2;
+  width: 3.5rem;
+  height: 3.5rem;
+  padding: 0.3rem;
+  border: 2px solid var(--navy);
+  border-radius: 50%;
+  background: var(--white);
+  animation: perch-bob 2.4s ease-in-out infinite;
+}
+.hint-perch .hint-bird { width: 100%; height: 100%; object-fit: contain; }
+@keyframes perch-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+@media (prefers-reduced-motion: reduce) { .hint-perch { animation: none; } }
+
+.brief-start { display: flex; align-items: center; justify-content: center; width: 100%; height: 3.5rem; margin-top: 0.5rem; }

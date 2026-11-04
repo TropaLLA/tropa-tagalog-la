@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Lightbulb, Mic, SendFill } from "react-bootstrap-icons";
+import { Grid, Keyboard, Mic, SendFill } from "react-bootstrap-icons";
 import IntroCards from "@/components/IntroCards";
 import LessonSummary, { type StepStats } from "@/components/LessonSummary";
 import ScenarioCard from "@/components/ScenarioCard";
@@ -23,9 +23,9 @@ type Tile = { id: number; text: string };
 
 // Swap these for real art later (one image per mood).
 const SPRITES = {
-  neutral: "/headshot.png",
-  happy: "/headshot.png",
-  confused: "/headshot.png",
+  neutral: "/neutral.png",
+  happy: "/neutral.png",
+  confused: "/neutral.png",
 };
 
 const blankStats = (count: number): StepStats[] =>
@@ -100,7 +100,7 @@ export default function Conversation({ lesson }: { lesson: Lesson }) {
         <div>
           <p className="chat-progress">Your mission</p>
           <ScenarioCard scenario={scenario} />
-          <button type="button" className="login-btn login-btn-primary" onClick={() => setPhase("chat")}>
+                    <button type="button" className="login-btn login-btn-primary brief-start" onClick={() => setPhase("chat")}>
             Start
           </button>
           <p className="scenario-tip">Tap “Scenario” during the chat to read this again.</p>
@@ -262,7 +262,6 @@ export default function Conversation({ lesson }: { lesson: Lesson }) {
         onBack={finished ? undefined : () => setShowLeave(true)}
       />
       <div className="chat">
-        <p className="chat-progress">{finished ? steps.length : index + 1}/{steps.length}</p>
 
         <div className="vn-toggles">
           <button
@@ -272,6 +271,7 @@ export default function Conversation({ lesson }: { lesson: Lesson }) {
           >
             {showScenario ? "Back to chat" : "Scenario"}
           </button>
+          <p className="chat-progress">{finished ? steps.length : index + 1}/{steps.length}</p>
           <button
             type="button"
             className="mode-toggle"
@@ -288,7 +288,7 @@ export default function Conversation({ lesson }: { lesson: Lesson }) {
             {messages.map((m, i) => (
               <div key={i} className={`chat-row ${m.from}`}>
                 {m.from === "mascot" && (
-                  <Image src="/headshot.png" alt="" width={36} height={36} className="chat-avatar" />
+                  <Image src="/mascot.png" alt="" width={36} height={36} className="chat-avatar" />
                 )}
                 <div className={`chat-bubble ${m.tone ?? ""}`}>
                   <div>{m.text}</div>
@@ -299,25 +299,28 @@ export default function Conversation({ lesson }: { lesson: Lesson }) {
             <div ref={endRef} />
           </div>
         ) : (
-          <>
-            <div
-              className="vn-stage"
-              style={
-                scenario.background
-                  ? { backgroundImage: `url(${scenario.background})`, backgroundSize: "cover", backgroundPosition: "center" }
-                  : undefined
-              }
-            >
-              <Image
-                key={mood}
-                src={SPRITES[mood]}
-                alt="Tambay"
-                width={180}
-                height={180}
-                className="vn-sprite"
-                priority
-              />
-            </div>
+          <div
+            className="vn-stage"
+            style={
+              scenario.background
+                ? { backgroundImage: `url(${scenario.background})`, backgroundSize: "cover", backgroundPosition: "center" }
+                : undefined
+            }
+          >
+            <Image
+              key={mood}
+              src={SPRITES[mood]}
+              alt="Tambay"
+              width={500}
+              height={1000}
+              className="vn-sprite"
+              priority
+            />
+             {!finished && (
+                <button type="button" className="hint-perch" onClick={showHint} aria-label="Ask the bird for a hint">
+                  <Image src="/bird.png" alt="" width={96} height={96} className="hint-bird" />
+                </button>
+              )}
             <div className="vn-box">
               <div className="vn-name">Tambay</div>
               {lines.map((m, i) => (
@@ -328,7 +331,7 @@ export default function Conversation({ lesson }: { lesson: Lesson }) {
               ))}
               {needsPrompt && <div className="vn-line">{step.prompt}</div>}
             </div>
-          </>
+          </div>
         )}
 
         {finished ? (
@@ -358,23 +361,27 @@ export default function Conversation({ lesson }: { lesson: Lesson }) {
                 </div>
 
                 <div className="tap-bank">
-                  {tiles
-                    .filter((t) => !picked.includes(t.id))
-                    .map((t) => (
+                  {tiles.map((t) => {
+                    const used = picked.includes(t.id);
+                    return (
                       <button
                         key={t.id}
                         type="button"
-                        className="tile"
+                        className={`tile${used ? " tile-used" : ""}`}
                         onClick={() => setPicked([...picked, t.id])}
+                        disabled={used}
+                        aria-hidden={used}
+                        tabIndex={used ? -1 : undefined}
                       >
                         {t.text}
                       </button>
-                    ))}
+                    );
+                  })}
                 </div>
 
                 <div className="tap-actions">
-                  <button type="button" className="icon-btn" onClick={showHint} aria-label="Hint">
-                    <Lightbulb size={20} />
+                  <button type="button" className="icon-btn" onClick={() => setMode("type")} aria-label="Type instead">
+                    <Keyboard size={20} />
                   </button>
                   <button
                     type="button"
@@ -388,8 +395,8 @@ export default function Conversation({ lesson }: { lesson: Lesson }) {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="chat-input">
-                <button type="button" className="icon-btn" onClick={showHint} aria-label="Hint">
-                  <Lightbulb size={20} />
+                <button type="button" className="icon-btn" onClick={() => setMode("tap")} aria-label="Tap words instead">
+                  <Grid size={18} />
                 </button>
                 <input
                   value={input}
@@ -410,21 +417,13 @@ export default function Conversation({ lesson }: { lesson: Lesson }) {
                 </button>
               </form>
             )}
-
-            <button
-              type="button"
-              className="mode-toggle"
-              onClick={() => setMode(mode === "tap" ? "type" : "tap")}
-            >
-              {mode === "tap" ? "Type instead" : "Tap words instead"}
-            </button>
           </>
         )}
 
         {showLeave && (
           <div className="leave-overlay" role="dialog" aria-modal="true">
             <div className="leave-card">
-              <Image src="/headshot.png" alt="" width={64} height={64} className="chat-avatar" />
+              <Image src="/mascot.png" alt="" width={64} height={64} className="chat-avatar" />
               <h2>Aalis ka na?</h2>
               <p>Are you sure you want to go back? Your progress in this lesson won&apos;t be saved.</p>
               <button type="button" className="login-btn login-btn-primary" onClick={() => setShowLeave(false)}>

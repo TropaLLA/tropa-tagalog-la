@@ -1,3 +1,7 @@
+"use client";
+
+import Image from "next/image";
+import { signOut } from "next-auth/react";
 import { ChevronRight } from "react-bootstrap-icons";
 import TopBar from "@/components/TopBar";
 
@@ -14,7 +18,7 @@ function LinkRow({ label }: { label: string }) {
   return (
     <button type="button" className="settings-row">
       <span>{label}</span>
-      <ChevronRight size={16} />
+      <ChevronRight size={16} aria-hidden="true" />
     </button>
   );
 }
@@ -64,7 +68,9 @@ export default function SettingsPage() {
       <TopBar title="Settings" backHref="/home" />
 
       <div className="settings-profile">
-        <div className="settings-avatar" />
+        <div className="settings-avatar">
+          <Image src="/mascot.png" alt="" width={56} height={56} />
+        </div>
         <div>
           <strong>Your name</strong>
           <small>you@example.com</small>
@@ -95,8 +101,11 @@ export default function SettingsPage() {
         <ValueRow label="Version" value="0.1.0" />
       </Section>
 
-      <button type="button" className="login-btn login-btn-primary">Log out</button>
-      <button type="button" className="settings-danger">Delete account</button>
+      <div className="settings-actions">
+        <button type="button" className="login-btn login-btn-primary" onClick={() => signOut({ callbackUrl: "/" })}>
+          Log out
+        </button>
+      </div>
     </>
   );
 }
