@@ -89,44 +89,72 @@
 .module-yellow { background: var(--yellow); }
 .module-green { background: var(--green); }
 
-/* Vocab hub: flashcard grid */
-.vocab-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+/* Vocab hub: swipeable flashcard row.
+   Uses .vocab-hub-card (not .vocab-card) because vocab.css styles the word
+   cards on /vocab/[slug] with .vocab-card and would paint these white. */
+.vocab-row {
+  display: flex;
+  align-items: stretch; /* every card as tall as the tallest */
   gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 0.25rem;
+  padding: 0.75rem 0.25rem 1rem; /* room for the hover lift and shadow */
+  scrollbar-width: none; /* Firefox */
+  -webkit-overflow-scrolling: touch;
 }
-@media (min-width: 768px) {
-  .vocab-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
-.vocab-card {
+.vocab-row::-webkit-scrollbar { display: none; } /* Chrome, Safari */
+.vocab-hub-card {
+  --card-color: var(--aqua);
+  flex: 0 0 min(70vw, 260px);
+  scroll-snap-align: start;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   gap: 0.5rem;
-  aspect-ratio: 3 / 4;
+  min-width: 0;
+  min-height: 15rem;
   padding: 1rem;
+  border: 3px solid var(--card-color);
+  border-top-width: 14px;
   border-radius: 1rem;
+  background: var(--white);
   color: var(--navy);
   text-decoration: none;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-  transform: rotate(-2deg);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.vocab-card:nth-child(even) { transform: rotate(2deg); }
-.vocab-card:hover,
-.vocab-card:focus-visible {
+.vocab-hub-card--aqua { --card-color: var(--aqua); }
+.vocab-hub-card--yellow { --card-color: var(--yellow); }
+.vocab-hub-card--green { --card-color: var(--green); }
+.vocab-hub-card:hover,
+.vocab-hub-card:focus-visible {
   color: var(--navy);
-  transform: rotate(0deg) translateY(-6px);
+  transform: translateY(-6px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
 }
-.vocab-card h2 { margin: 0; font-size: 1.1rem; font-weight: 800; }
-.vocab-card-count { margin: 0; font-size: 0.8rem; font-weight: 700; }
-.vocab-card-sample { margin: 0; font-size: 0.85rem; font-style: italic; overflow-wrap: anywhere; }
+.vocab-hub-card h2 {
+  margin: 0;
+  font-size: clamp(1rem, 4.5vw, 1.25rem);
+  font-weight: 800;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+.vocab-hub-card-count { margin: 0; font-size: 0.8rem; font-weight: 700; }
+.vocab-hub-card-sample {
+  margin: auto 0 0; /* pushes the sample to the bottom of the card */
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  background: var(--beige); /* fallback if color-mix is unsupported */
+  background: color-mix(in srgb, var(--card-color) 22%, var(--white));
+  font-size: 0.85rem;
+  font-style: italic;
+  overflow-wrap: anywhere;
+}
 @media (prefers-reduced-motion: reduce) {
-  .vocab-card,
-  .vocab-card:nth-child(even),
-  .vocab-card:hover,
-  .vocab-card:focus-visible {
+  .vocab-row { scroll-behavior: auto; }
+  .vocab-hub-card,
+  .vocab-hub-card:hover,
+  .vocab-hub-card:focus-visible {
     transform: none;
     transition: none;
   }
