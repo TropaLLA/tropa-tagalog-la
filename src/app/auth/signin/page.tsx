@@ -43,7 +43,7 @@ export default function SignInPage() {
 
       <form onSubmit={handleSubmit} className="login-form">
         <Image src="/bird.png" alt="Mascot" width={120} height={120} className="login-bird" priority />
-        <h1 className="login-title">Welcome!</h1>
+        <h1 className="login-title title-screen">Welcome!</h1>
 
         <label htmlFor="email" className="login-label">Email</label>
         <input

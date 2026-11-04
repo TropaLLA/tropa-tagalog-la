@@ -33,7 +33,7 @@ function Dashboard({ greeting, state }: { greeting: string; state: DailyState })
     <div className={styles.page}>
       <section className={styles.hero}>
         <div className={styles.heroText}>
-          <h1 className={styles.greeting}>{greeting}</h1>
+          <h1 className={`${styles.greeting} title-screen`}>{greeting}</h1>
           <div className={styles.bubble}>Ready for today&apos;s lesson?</div>
         </div>
         <Image src="/mascot.png" alt="Tambay" width={84} height={174} className={styles.mascot} priority />
