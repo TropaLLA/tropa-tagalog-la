@@ -4,9 +4,9 @@ import { VOCAB } from "@/lib/vocab";
 import MascotSays from "@/components/MascotSays";
 
 const look = {
-  travel: { Icon: GeoAlt, color: "module-aqua" },
-  restaurant: { Icon: EggFried, color: "module-yellow" },
-  daily: { Icon: ChatQuote, color: "module-green" },
+  travel: { Icon: GeoAlt, color: "vocab-hub-card--aqua" },
+  restaurant: { Icon: EggFried, color: "vocab-hub-card--yellow" },
+  daily: { Icon: ChatQuote, color: "vocab-hub-card--green" },
 } as const;
 
 export default function VocabHubPage() {
@@ -14,20 +14,20 @@ export default function VocabHubPage() {
     <>
       <h1 className="page-heading">Vocab</h1>
       <MascotSays tagalog="Tara, mag-aral tayo ng mga salita!" english="Let's learn some words today!" />
-      <div className="vocab-grid">
+      <div className="vocab-row">
         {VOCAB.map((theme) => {
           const { Icon, color } = look[theme.slug as keyof typeof look];
           const words = theme.sections.flatMap((s) => s.items);
           const sample = words[0];
           return (
-            <Link key={theme.slug} href={`/vocab/${theme.slug}`} className={`vocab-card ${color}`}>
+            <Link key={theme.slug} href={`/vocab/${theme.slug}`} className={`vocab-hub-card ${color}`}>
               <Icon size={28} aria-hidden="true" />
               <h2>{theme.title}</h2>
-              <p className="vocab-card-count">
+              <p className="vocab-hub-card-count">
                 {words.length} {words.length === 1 ? "word" : "words"}
               </p>
               {sample && (
-                <p className="vocab-card-sample">
+                <p className="vocab-hub-card-sample">
                   {sample.word} → {sample.meaning}
                 </p>
               )}
