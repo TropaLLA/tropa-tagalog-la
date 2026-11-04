@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import TopBar from "@/components/TopBar";
 import { VolumeUpFill } from "react-bootstrap-icons";
 import { speak } from "@/lib/speech";
 import type { IntroCard } from "@/lib/lessons";
@@ -22,11 +22,8 @@ export default function IntroCards({
 
   return (
     <div>
-      <div className="chat-header">
-        <Link href="/lesson" className="chat-back">← Lessons</Link>
-        <strong>{title}</strong>
-        <span>{i + 1}/{cards.length}</span>
-      </div>
+      <TopBar title={title} backHref="/lesson" />
+      <p className="chat-progress">{i + 1}/{cards.length}</p>
 
       <div className="intro-card">
         <div className="intro-art">

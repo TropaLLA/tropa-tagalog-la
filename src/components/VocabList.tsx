@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { Mic, VolumeUpFill } from "react-bootstrap-icons";
 import { normalize } from "@/lib/lessons";
 import { listen, speak } from "@/lib/speech";
+import TopBar from "@/components/TopBar";
 import type { VocabItem, VocabTheme } from "@/lib/vocab";
 
 // "Nasaan ang...?" -> "Nasaan ang?" so the voice doesn't read out dots
@@ -34,11 +34,7 @@ export default function VocabList({ theme }: { theme: VocabTheme }) {
 
   return (
     <>
-      <div className="chat-header">
-        <Link href="/vocab" className="chat-back">← Vocab</Link>
-        <strong>{theme.title}</strong>
-        <span />
-      </div>
+      <TopBar title={theme.title} backHref="/vocab" />
 
       {theme.sections.map((section) => (
         <section key={section.heading}>

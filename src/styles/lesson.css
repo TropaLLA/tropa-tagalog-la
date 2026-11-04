@@ -1,7 +1,7 @@
 /* ---------- Conversation (chat transcript) ---------- */
 .chat { display: flex; flex-direction: column; }
 .chat-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
-.chat-back { color: var(--navy); font-weight: 700; text-decoration: none; }
+.chat-progress { margin: 0 0 0.75rem; font-size: 0.85rem; font-weight: 700; text-align: right; opacity: 0.8; }
 .chat-log {
   display: flex;
   flex-direction: column;
@@ -174,7 +174,6 @@
 .scenario-tip { margin: 0.75rem 0 0; font-size: 0.85rem; text-align: center; opacity: 0.8; }
 .scenario-toggle { margin: 0 auto 0.5rem; }
 
-.chat-back-btn { border: none; background: none; padding: 0; font: inherit; cursor: pointer; }
 
 .leave-overlay {
   position: fixed;

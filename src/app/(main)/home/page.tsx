@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useSyncExternalStore } from "react";
 import { liveStreak, loadDaily, todayKey, type DailyState } from "@/lib/daily";
+import TopBar from "@/components/TopBar";
 import styles from "./home.module.css";
 
 const EMPTY: DailyState = { lastDone: null, streak: 0, best: 0 };
@@ -88,5 +89,10 @@ function ClientDashboard() {
 
 export default function HomePage() {
   const mounted = useSyncExternalStore(noopSubscribe, () => true, () => false);
-  return mounted ? <ClientDashboard /> : <Dashboard greeting="Kumusta!" state={EMPTY} />;
+  return (
+    <>
+      <TopBar title="Home" />
+      {mounted ? <ClientDashboard /> : <Dashboard greeting="Kumusta!" state={EMPTY} />}
+    </>
+  );
 }

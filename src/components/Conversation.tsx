@@ -2,12 +2,12 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Lightbulb, Mic, SendFill } from "react-bootstrap-icons";
 import IntroCards from "@/components/IntroCards";
 import LessonSummary, { type StepStats } from "@/components/LessonSummary";
 import ScenarioCard from "@/components/ScenarioCard";
+import TopBar from "@/components/TopBar";
 import { completeToday } from "@/lib/daily";
 import { listen } from "@/lib/speech";
 import { normalize, type Lesson, type Scenario } from "@/lib/lessons";
@@ -96,11 +96,8 @@ export default function Conversation({ lesson }: { lesson: Lesson }) {
   if (phase === "brief") {
     return (
       <div>
-        <div className="chat-header">
-          <Link href="/lesson" className="chat-back">← Lessons</Link>
-          <strong>{lesson.title}</strong>
-          <span>Your mission</span>
-        </div>
+        <TopBar title={lesson.title} backHref="/lesson" />
+        <p className="chat-progress">Your mission</p>
         <ScenarioCard scenario={scenario} />
         <button type="button" className="login-btn login-btn-primary" onClick={() => setPhase("chat")}>
           Start
@@ -255,17 +252,13 @@ export default function Conversation({ lesson }: { lesson: Lesson }) {
 
   return (
     <div className="chat">
-      <div className="chat-header">
-        {finished ? (
-          <Link href="/lesson" className="chat-back">← Lessons</Link>
-        ) : (
-          <button type="button" className="chat-back chat-back-btn" onClick={() => setShowLeave(true)}>
-            ← Lessons
-          </button>
-        )}
-        <strong>{scenario.title}</strong>
-        <span>{finished ? steps.length : index + 1}/{steps.length}</span>
-      </div>
+      {/* Mid-lesson, the back arrow asks before leaving; once finished it just goes. */}
+      <TopBar
+        title={scenario.title}
+        backHref="/lesson"
+        onBack={finished ? undefined : () => setShowLeave(true)}
+      />
+      <p className="chat-progress">{finished ? steps.length : index + 1}/{steps.length}</p>
 
       <div className="vn-toggles">
         <button

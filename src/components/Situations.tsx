@@ -59,11 +59,6 @@ export default function Situations() {
           : "These take practice. Read the recap below and try again.";
     return (
       <div className={styles.wrap}>
-        <div className={styles.top}>
-          <Link href="/lesson" className={styles.back}>
-            ← Lessons
-          </Link>
-        </div>
         <div className={styles.hero}>
           <Tambay size={72} />
           <h1>{headline}</h1>
@@ -97,9 +92,6 @@ export default function Situations() {
   return (
     <div className={styles.wrap}>
       <div className={styles.top}>
-        <Link href="/lesson" className={styles.back}>
-          ← Lessons
-        </Link>
         <span className={styles.count}>
           {index + 1}/{SITUATIONS.length}
         </span>

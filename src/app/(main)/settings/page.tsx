@@ -1,4 +1,5 @@
 import { ChevronRight } from "react-bootstrap-icons";
+import TopBar from "@/components/TopBar";
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -60,7 +61,7 @@ function SelectRow({
 export default function SettingsPage() {
   return (
     <>
-      <h1 className="page-heading">Settings</h1>
+      <TopBar title="Settings" backHref="/home" />
 
       <div className="settings-profile">
         <div className="settings-avatar" />
