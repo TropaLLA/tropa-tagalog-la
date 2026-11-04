@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Signpost, CupHot, ChatDots } from "react-bootstrap-icons";
 import { VOCAB } from "@/lib/vocab";
+import MascotSays from "@/components/MascotSays";
 
 const look = {
   travel: { Icon: Signpost, color: "module-aqua" },
@@ -12,6 +13,7 @@ export default function VocabHubPage() {
   return (
     <>
       <h1 className="page-heading">Vocab</h1>
+      <MascotSays tagalog="Tara, mag-aral tayo ng mga salita!" english="Let's learn some words today!" />
       <div className="module-list">
         {VOCAB.map((theme) => {
           const { Icon, color } = look[theme.slug as keyof typeof look];

@@ -1,0 +1,18 @@
+.row { display: flex; align-items: center; gap: 0.6rem; margin: 0.25rem 0 1rem; }
+.avatar {
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 2px solid var(--navy);
+  background: var(--yellow);
+  object-fit: cover;
+}
+.bubble {
+  display: flex;
+  flex-direction: column;
+  padding: 0.55rem 0.9rem;
+  background: var(--white);
+  border: 2px solid var(--navy);
+  border-radius: 1.25rem 1.25rem 1.25rem 0.3rem;
+}
+.bubble strong { font-size: 1rem; }
+.bubble small { font-weight: 600; opacity: 0.75; }

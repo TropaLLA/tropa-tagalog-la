@@ -173,3 +173,36 @@
 .scenario-card ul { margin: 0; padding-left: 1.25rem; }
 .scenario-tip { margin: 0.75rem 0 0; font-size: 0.85rem; text-align: center; opacity: 0.8; }
 .scenario-toggle { margin: 0 auto 0.5rem; }
+
+.chat-back-btn { border: none; background: none; padding: 0; font: inherit; cursor: pointer; }
+
+.leave-overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 430px; /* matches the phone frame */
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(15, 59, 117, 0.55);
+}
+.leave-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 1.5rem 1.25rem 1.25rem;
+  border: 2px solid var(--navy);
+  border-radius: 1.75rem;
+  background: var(--white);
+  text-align: center;
+}
+.leave-card h2 { margin: 0.5rem 0 0; font-size: 1.5rem; font-weight: 800; }
+.leave-card p { margin: 0 0 0.5rem; }
+.leave-card .login-btn { width: 100%; }

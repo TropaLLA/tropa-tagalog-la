@@ -3,12 +3,15 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Lightbulb, Mic, SendFill } from "react-bootstrap-icons";
 import IntroCards from "@/components/IntroCards";
 import LessonSummary, { type StepStats } from "@/components/LessonSummary";
 import ScenarioCard from "@/components/ScenarioCard";
+import { completeToday } from "@/lib/daily";
 import { listen } from "@/lib/speech";
 import { normalize, type Lesson, type Scenario } from "@/lib/lessons";
+import Reflection from "@/components/Reflection";
 
 type Msg = {
   from: "mascot" | "me";
@@ -20,9 +23,9 @@ type Tile = { id: number; text: string };
 
 // Swap these for real art later (one image per mood).
 const SPRITES = {
-  neutral: "/mascot.png",
-  happy: "/mascot.png",
-  confused: "/mascot.png",
+  neutral: "/headshot.png",
+  happy: "/headshot.png",
+  confused: "/headshot.png",
 };
 
 const blankStats = (count: number): StepStats[] =>
@@ -54,6 +57,7 @@ function shuffled(words: string[], seed: number): Tile[] {
 }
 
 export default function Conversation({ lesson }: { lesson: Lesson }) {
+  const router = useRouter();
   const [phase, setPhase] = useState<"cards" | "brief" | "chat">("cards");
   const [mode, setMode] = useState<"tap" | "type">("tap");
   const [scenarioIndex, setScenarioIndex] = useState(0);
@@ -62,6 +66,8 @@ export default function Conversation({ lesson }: { lesson: Lesson }) {
   const [showSummary, setShowSummary] = useState(false);
   const [showScenario, setShowScenario] = useState(false);
   const [showTranscript, setShowTranscript] = useState(false);
+  const [showLeave, setShowLeave] = useState(false);
+  const [hintLevel, setHintLevel] = useState(0);
   const [stats, setStats] = useState<StepStats[]>(() => blankStats(lesson.scenarios[0].steps.length));
   const [input, setInput] = useState("");
   const [picked, setPicked] = useState<number[]>([]);
@@ -119,17 +125,29 @@ export default function Conversation({ lesson }: { lesson: Lesson }) {
       if (next) {
         added.push({ from: "mascot", text: next.prompt });
         setIndex(index + 1);
+        setHintLevel(0);
       } else {
         added.push({ from: "mascot", text: lesson.outro });
         setFinished(true);
+        completeToday(); // finishing a lesson counts toward the home streak
       }
     } else {
       const known = step.mistakes?.find((m) => clean.includes(normalize(m.contains)));
-      added.push({
-        from: "mascot",
-        text: known ? known.feedback : "Something is wrong, try again.",
-        tone: "error",
-      });
+      const attempts = stats[index].wrong.length; // wrong tries so far on this step
+
+      // Feedback gets more specific the more times the learner tries.
+      let feedback: string;
+      if (attempts === 0) {
+        feedback = "Good try! Something is wrong. Try again.";
+      } else if (attempts === 1) {
+        feedback = known ? known.feedback : "There is an error in your sentence. Check the words you used.";
+      } else {
+        feedback = known
+          ? `${known.feedback} Tap the lightbulb if you want a hint.`
+          : "Look closely at the vocabulary you used. Tap the lightbulb if you want a hint.";
+      }
+
+      added.push({ from: "mascot", text: feedback, tone: "error" });
       setStats((all) =>
         all.map((s, i) =>
           i === index
@@ -155,18 +173,36 @@ export default function Conversation({ lesson }: { lesson: Lesson }) {
     if (check(picked.map(tileText).join(" "))) setPicked([]);
   }
 
+  // Hints go step by step: translation, then word choices, then the answer.
   function showHint() {
     if (finished) return;
     setStats((all) => all.map((s, i) => (i === index ? { ...s, hinted: true } : s)));
-    setMessages((m) => [
-      ...m,
-      {
+    const level = Math.min(hintLevel + 1, 3);
+    setHintLevel(level);
+
+    let msg: Msg;
+    if (level === 1) {
+      msg = { from: "mascot", text: `Hint: the question means "${step.translation}"`, tone: "hint" };
+    } else if (level === 2) {
+      if (mode === "type") {
+        setMode("tap");
+        msg = {
+          from: "mascot",
+          text: "Here are some word choices. Tap them in order to build your answer.",
+          tone: "hint",
+        };
+      } else {
+        msg = { from: "mascot", text: `Try starting with "${wordsOf(step.hint)[0]}".`, tone: "hint" };
+      }
+    } else {
+      msg = {
         from: "mascot",
         text: `Answer: ${step.hint}`,
         sub: `Question: ${step.translation}\nAnswer: ${step.hintTranslation}`,
         tone: "hint",
-      },
-    ]);
+      };
+    }
+    setMessages((m) => [...m, msg]);
   }
 
   function startListening() {
@@ -189,6 +225,8 @@ export default function Conversation({ lesson }: { lesson: Lesson }) {
     setShowSummary(false);
     setShowScenario(false);
     setShowTranscript(false);
+    setShowLeave(false);
+    setHintLevel(0);
     setInput("");
     setPicked([]);
     setStats(blankStats(next.steps.length));
@@ -197,7 +235,12 @@ export default function Conversation({ lesson }: { lesson: Lesson }) {
   }
 
   if (showSummary) {
-    return <LessonSummary lesson={lesson} scenario={scenario} stats={stats} onRestart={restart} />;
+    return (
+      <>
+        <LessonSummary lesson={lesson} scenario={scenario} stats={stats} onRestart={restart} />
+        <Reflection />
+      </>
+    );
   }
 
   // What Tambay is saying right now: his latest consecutive lines, plus the current
@@ -213,7 +256,13 @@ export default function Conversation({ lesson }: { lesson: Lesson }) {
   return (
     <div className="chat">
       <div className="chat-header">
-        <Link href="/lesson" className="chat-back">← Lessons</Link>
+        {finished ? (
+          <Link href="/lesson" className="chat-back">← Lessons</Link>
+        ) : (
+          <button type="button" className="chat-back chat-back-btn" onClick={() => setShowLeave(true)}>
+            ← Lessons
+          </button>
+        )}
         <strong>{scenario.title}</strong>
         <span>{finished ? steps.length : index + 1}/{steps.length}</span>
       </div>
@@ -254,7 +303,14 @@ export default function Conversation({ lesson }: { lesson: Lesson }) {
         </div>
       ) : (
         <>
-          <div className="vn-stage">
+          <div
+            className="vn-stage"
+            style={
+              scenario.background
+                ? { backgroundImage: `url(${scenario.background})`, backgroundSize: "cover", backgroundPosition: "center" }
+                : undefined
+            }
+          >
             <Image
               key={mood}
               src={SPRITES[mood]}
@@ -366,6 +422,22 @@ export default function Conversation({ lesson }: { lesson: Lesson }) {
             {mode === "tap" ? "Type instead" : "Tap words instead"}
           </button>
         </>
+      )}
+
+      {showLeave && (
+        <div className="leave-overlay" role="dialog" aria-modal="true">
+          <div className="leave-card">
+            <Image src="/headshot.png" alt="" width={64} height={64} className="chat-avatar" />
+            <h2>Aalis ka na?</h2>
+            <p>Are you sure you want to go back? Your progress in this lesson won&apos;t be saved.</p>
+            <button type="button" className="login-btn login-btn-primary" onClick={() => setShowLeave(false)}>
+              Stay and keep practicing
+            </button>
+            <button type="button" className="mode-toggle" onClick={() => router.push("/lesson")}>
+              Leave lesson
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

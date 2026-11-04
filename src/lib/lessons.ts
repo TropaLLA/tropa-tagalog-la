@@ -24,6 +24,7 @@ export type Scenario = {
   wants: string[];  // what the learner is trying to do
   facts: string[];  // details the learner uses in their answers
   steps: Step[];
+  background?: string; // e.g. "/backgrounds/airport.png"
 };
 
 export type Lesson = {

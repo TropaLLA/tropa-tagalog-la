@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { Signpost, CupHot, ChatDots } from "react-bootstrap-icons";
+import GameCards from "@/components/GameCards";
+import MascotSays from "@/components/MascotSays";
 import { LESSONS } from "@/lib/lessons";
 
 const look = {
@@ -12,6 +14,11 @@ export default function LessonHubPage() {
   return (
     <>
       <h1 className="page-heading">Lessons</h1>
+      <MascotSays tagalog="Handa ka na ba?" english="Are you ready? Pick a lesson." />
+
+      <h2 className="section-title" style={{ margin: "0.5rem 0 0.75rem" }}>
+        Chat with Tambay
+      </h2>
       <div className="module-list">
         {LESSONS.map((lesson) => {
           const { Icon, color } = look[lesson.slug as keyof typeof look];
@@ -26,6 +33,8 @@ export default function LessonHubPage() {
           );
         })}
       </div>
+
+      <GameCards />
     </>
   );
 }

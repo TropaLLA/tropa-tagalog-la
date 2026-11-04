@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import NavBar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-const NO_CHROME = ["/auth", "/home", "/vocab", "/lesson", "/settings", "/call"];
+const NO_CHROME = ["/auth", "/home", "/vocab", "/lesson", "/settings", "/call", "/decipher", "/daily", "/situations"];
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();

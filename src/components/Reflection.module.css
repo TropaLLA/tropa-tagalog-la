@@ -1,0 +1,54 @@
+.card {
+  margin: 1.25rem 0 2rem;
+  padding: 1.1rem;
+  border: 2px solid var(--navy);
+  border-radius: 1.5rem;
+  background: var(--white);
+}
+.head { display: flex; align-items: center; gap: 0.6rem; }
+.avatar {
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 2px solid var(--navy);
+  background: var(--yellow);
+  object-fit: cover;
+}
+.bubble { font-weight: 800; }
+
+.options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-top: 0.9rem; }
+.option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  min-height: 4.25rem; /* big tap targets */
+  padding: 0.5rem 0.25rem;
+  border: 2px solid var(--navy);
+  border-radius: 1.1rem;
+  background: var(--yellow);
+  color: var(--navy);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+.option:active { transform: translateY(2px); }
+.emoji { font-size: 1.6rem; line-height: 1; }
+
+.tip { margin-top: 0.75rem; }
+.tip p { margin: 0 0 0.5rem; font-weight: 600; }
+.note { font-size: 0.9rem; opacity: 0.8; }
+
+.skip {
+  display: block;
+  margin: 0.75rem auto 0;
+  border: none;
+  background: none;
+  color: var(--navy);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+  opacity: 0.7;
+}
